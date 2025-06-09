@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class PaymentGateway(models.Model):
     """Model for payment gateway configurations"""
     GATEWAY_TYPES = [
@@ -8,7 +9,7 @@ class PaymentGateway(models.Model):
         ('IDPAY', 'IDPay'),
         ('NEXTPAY', 'NextPay'),
     ]
-    
+
     name = models.CharField(max_length=50)
     gateway_type = models.CharField(max_length=20, choices=GATEWAY_TYPES)
     is_active = models.BooleanField(default=True)
@@ -20,6 +21,7 @@ class PaymentGateway(models.Model):
     def __str__(self):
         return f"{self.get_gateway_type_display()} - {self.name}"
 
+
 class Transaction(models.Model):
     """Model for tracking all financial transactions"""
     TRANSACTION_TYPES = [
@@ -29,21 +31,22 @@ class Transaction(models.Model):
         ('CONTRIBUTION', 'Contribution'),
         ('REFUND', 'Refund'),
     ]
-    
+
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('SUCCESS', 'Successful'),
         ('FAILED', 'Failed'),
         ('REFUNDED', 'Refunded'),
     ]
-    
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='transactions'
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    transaction_type = models.CharField(
+        max_length=20, choices=TRANSACTION_TYPES)
     payment_method = models.CharField(
         max_length=20,
         choices=[('WALLET', 'Wallet'), ('ONLINE', 'Online Gateway')]

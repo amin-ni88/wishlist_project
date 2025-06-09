@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator
 from decimal import Decimal
 from .models.categorization import Category, Tag
 
+
 class User(AbstractUser):
     """Extended user model for additional functionality"""
     phone_number = models.CharField(max_length=15, blank=True)
@@ -27,11 +28,11 @@ class User(AbstractUser):
             subscription = self.subscription
             if not subscription.is_active:
                 return False
-            
+
             current_wishlists = self.wishlists.count()
             if current_wishlists >= subscription.plan.max_wishlists:
                 return False
-                
+
             return True
         except UserSubscription.DoesNotExist:
             return False
@@ -50,11 +51,13 @@ class User(AbstractUser):
         except UserSubscription.DoesNotExist:
             return False
 
+
 class WishList(models.Model):
     """Model for user wishlists"""
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='wishlists')
     occasion_date = models.DateField(null=True, blank=True)
     is_public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,6 +69,7 @@ class WishList(models.Model):
     def __str__(self):
         return f"{self.owner.username}'s {self.title}"
 
+
 class WishListItem(models.Model):
     """Model for items within a wishlist"""
     STATUS_CHOICES = [
@@ -74,13 +78,16 @@ class WishListItem(models.Model):
         ('FULFILLED', 'Fulfilled')
     ]
 
-    wishlist = models.ForeignKey(WishList, on_delete=models.CASCADE, related_name='items')
+    wishlist = models.ForeignKey(
+        WishList, on_delete=models.CASCADE, related_name='items')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     product_url = models.URLField(blank=True)
-    image = models.ImageField(upload_to='wishlist_items/', null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='AVAILABLE')
+    image = models.ImageField(
+        upload_to='wishlist_items/', null=True, blank=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='AVAILABLE')
     priority = models.PositiveSmallIntegerField(default=1)
     category = models.ForeignKey(
         Category,
@@ -120,10 +127,13 @@ class WishListItem(models.Model):
     def __str__(self):
         return f"{self.name} - {self.wishlist.title}"
 
+
 class Contribution(models.Model):
     """Model for tracking contributions to wishlist items"""
-    item = models.ForeignKey(WishListItem, on_delete=models.CASCADE, related_name='contributions')
-    contributor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='contributions')
+    item = models.ForeignKey(
+        WishListItem, on_delete=models.CASCADE, related_name='contributions')
+    contributor = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='contributions')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     message = models.TextField(blank=True)
     is_anonymous = models.BooleanField(default=False)
@@ -135,6 +145,7 @@ class Contribution(models.Model):
     def __str__(self):
         return f"Contribution to {self.item.name} by {self.contributor.username if not self.is_anonymous else 'Anonymous'}"
 
+
 class Notification(models.Model):
     """Model for user notifications"""
     NOTIFICATION_TYPES = [
@@ -144,7 +155,8 @@ class Notification(models.Model):
         ('OCCASION_REMINDER', 'Occasion Reminder'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='notifications')
     type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
@@ -152,6 +164,7 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
 
 class Plan(models.Model):
     """Model for subscription plans"""
@@ -161,7 +174,7 @@ class Plan(models.Model):
         ('PREMIUM', 'Premium'),
         ('BUSINESS', 'Business'),
     ]
-    
+
     DURATION_TYPES = [
         ('MONTHLY', 'Monthly'),
         ('YEARLY', 'Yearly'),
@@ -201,7 +214,7 @@ class Plan(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def get_price(self, duration_type):
         if duration_type == 'MONTHLY':
             return self.monthly_price
@@ -214,20 +227,24 @@ class Plan(models.Model):
     def __str__(self):
         return f"{self.name} - {self.price}"
 
+
 class UserSubscription(models.Model):
     """Model for user subscriptions"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='subscription')
     plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     auto_renew = models.BooleanField(default=False)
-    payment_id = models.CharField(max_length=100, blank=True)  # For payment gateway reference
+    # For payment gateway reference
+    payment_id = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username}'s {self.plan.name} subscription"
+
 
 class PaymentHistory(models.Model):
     """Model for subscription payment history"""
@@ -238,8 +255,10 @@ class PaymentHistory(models.Model):
         ('REFUNDED', 'Refunded'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
-    subscription = models.ForeignKey(UserSubscription, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='payments')
+    subscription = models.ForeignKey(
+        UserSubscription, on_delete=models.SET_NULL, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=PAYMENT_STATUS)
     payment_method = models.CharField(max_length=50)

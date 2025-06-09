@@ -4,6 +4,7 @@ import uuid
 from datetime import timedelta
 from django.utils import timezone
 
+
 class GuestContributor(models.Model):
     """Model for tracking guest contributors"""
     email = models.EmailField()
@@ -18,6 +19,7 @@ class GuestContributor(models.Model):
     @staticmethod
     def generate_token():
         return str(uuid.uuid4())
+
 
 class GuestContribution(models.Model):
     """Model for tracking contributions from non-registered users"""
@@ -47,6 +49,7 @@ class GuestContribution(models.Model):
 
     def __str__(self):
         return f"{self.guest.name}'s contribution to {self.item.name}"
+
 
 class GuestAccessToken(models.Model):
     """Model for managing temporary access to wishlists for guests"""

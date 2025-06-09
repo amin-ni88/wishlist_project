@@ -4,6 +4,7 @@ from core.models import Transaction
 
 User = get_user_model()
 
+
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
@@ -17,6 +18,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             'description',
             'created_at'
         ]
+
 
 class WalletChargeRequestSerializer(serializers.Serializer):
     amount = serializers.DecimalField(
@@ -36,6 +38,7 @@ class WalletChargeRequestSerializer(serializers.Serializer):
                 "Charge amount cannot exceed 1,000,000"
             )
         return value
+
 
 class WalletTransferRequestSerializer(serializers.Serializer):
     recipient = serializers.SlugRelatedField(

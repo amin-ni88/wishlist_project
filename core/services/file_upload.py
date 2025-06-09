@@ -6,9 +6,10 @@ import uuid
 from PIL import Image
 from io import BytesIO
 
+
 class FileUploadService:
     """Service for handling file uploads with validation and optimization"""
-    
+
     ALLOWED_IMAGE_TYPES = {'image/jpeg', 'image/png', 'image/webp'}
     MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB
     THUMB_SIZES = {
@@ -55,7 +56,8 @@ class FileUploadService:
 
         # Generate thumbnails if requested
         if generate_thumbnails:
-            result['thumbnails'] = cls._generate_thumbnails(img, folder, filename)
+            result['thumbnails'] = cls._generate_thumbnails(
+                img, folder, filename)
 
         return result
 
@@ -90,9 +92,10 @@ class FileUploadService:
             # Delete thumbnails if they exist
             folder = os.path.dirname(path)
             name, ext = os.path.splitext(os.path.basename(path))
-            
+
             for size_name in cls.THUMB_SIZES.keys():
-                thumb_path = os.path.join(folder, 'thumbnails', f"{name}_{size_name}{ext}")
+                thumb_path = os.path.join(
+                    folder, 'thumbnails', f"{name}_{size_name}{ext}")
                 if default_storage.exists(thumb_path):
                     default_storage.delete(thumb_path)
 

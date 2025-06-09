@@ -31,7 +31,7 @@ urlpatterns = [
         WalletViewSet.as_view({'get': 'transactions'}),
         name='wallet-transactions'
     ),
-    
+
     # Contribution URLs
     path(
         'items/<int:item_id>/contributions/',
@@ -46,7 +46,7 @@ urlpatterns = [
         ContributionViewSet.as_view({'get': 'summary'}),
         name='item-contributions-summary'
     ),
-    
+
     # Payment verification URLs
     path(
         'payments/verify/<str:reference_id>/',

@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .invitation {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #6c757d;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .invitation {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 15px 0;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #6c757d;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>Wishlist Invitation</h1>
-        </div>
-        
-        <p>Hello {{ invitation.invited_user.username }},</p>
-        
-        <p><strong>{{ invitation.invited_by.username }}</strong> has shared their wishlist "{{ wishlist.title }}" with you!</p>
-        
-        <div class="invitation">
-            {% if wishlist.description %}
-            <p>{{ wishlist.description }}</p>
-            {% endif %}
-            <p>Items in this wishlist: {{ wishlist.items.count }}</p>
-        </div>
-        
-        {% if invitation.message %}
-        <p>Message from {{ invitation.invited_by.username }}:</p>
-        <p>"{{ invitation.message }}"</p>
+      <div class="header">
+        <h1>Wishlist Invitation</h1>
+      </div>
+
+      <p>Hello {{ invitation.invited_user.username }},</p>
+
+      <p>
+        <strong>{{ invitation.invited_by.username }}</strong> has shared their
+        wishlist "{{ wishlist.title }}" with you!
+      </p>
+
+      <div class="invitation">
+        {% if wishlist.description %}
+        <p>{{ wishlist.description }}</p>
         {% endif %}
-        
-        <a href="{{ accept_invitation_url }}" class="button">View Wishlist</a>
-        
-        <div class="footer">
-            <p>This is an automated message, please do not reply directly to this email.</p>
-            <p>To manage your notification preferences, visit your account settings.</p>
-        </div>
+        <p>Items in this wishlist: {{ wishlist.items.count }}</p>
+      </div>
+
+      {% if invitation.message %}
+      <p>Message from {{ invitation.invited_by.username }}:</p>
+      <p>"{{ invitation.message }}"</p>
+      {% endif %}
+
+      <a href="{{ accept_invitation_url }}" class="button">View Wishlist</a>
+
+      <div class="footer">
+        <p>
+          This is an automated message, please do not reply directly to this
+          email.
+        </p>
+        <p>
+          To manage your notification preferences, visit your account settings.
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

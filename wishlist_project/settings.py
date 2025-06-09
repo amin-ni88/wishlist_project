@@ -21,14 +21,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party apps
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
     'django_filters',
-    
+
     # Local apps
     'core',
 ]
@@ -143,7 +143,8 @@ ZARINPAL_CALLBACK_URL = 'http://your-domain.com/api/payments/verify/'
 ZARINPAL_SANDBOX = True  # Set to False in production
 
 # Subscription Settings
-SUBSCRIPTION_EXPIRY_REMINDER_DAYS = [7, 3, 1]  # Days before expiry to send reminders
+# Days before expiry to send reminders
+SUBSCRIPTION_EXPIRY_REMINDER_DAYS = [7, 3, 1]
 AUTO_RENEWAL_THRESHOLD_DAYS = 1  # Days before expiry to attempt auto-renewal
 SUBSCRIPTION_GRACE_PERIOD_DAYS = 3  # Days after expiry before full deactivation
 

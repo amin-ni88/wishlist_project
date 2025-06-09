@@ -9,9 +9,10 @@ import os.path
 import pickle
 from typing import Optional
 
+
 class CalendarIntegration:
     """Service for integrating wishlists with calendar services"""
-    
+
     SCOPES = ['https://www.googleapis.com/auth/calendar.events']
     CALENDAR_COLORS = {
         'birthday': '2',  # Light blue
@@ -25,11 +26,11 @@ class CalendarIntegration:
         """Get or refresh Google Calendar credentials"""
         creds = None
         token_path = f'tokens/calendar_token_{user_id}.pickle'
-        
+
         if os.path.exists(token_path):
             with open(token_path, 'rb') as token:
                 creds = pickle.load(token)
-        
+
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
@@ -39,10 +40,10 @@ class CalendarIntegration:
                     CalendarIntegration.SCOPES
                 )
                 creds = flow.run_local_server(port=0)
-            
+
             with open(token_path, 'wb') as token:
                 pickle.dump(creds, token)
-        
+
         return creds
 
     @staticmethod
@@ -54,14 +55,14 @@ class CalendarIntegration:
                 return False
 
             service = build('calendar', 'v3', credentials=creds)
-            
+
             # Set event details
             occasion_type = wishlist.occasion_type.lower()
             color_id = CalendarIntegration.CALENDAR_COLORS.get(
                 occasion_type,
                 CalendarIntegration.CALENDAR_COLORS['other']
             )
-            
+
             event = {
                 'summary': wishlist.title,
                 'description': (
@@ -83,22 +84,22 @@ class CalendarIntegration:
                     ]
                 }
             }
-            
+
             # Add recurring event if needed
             if wishlist.is_recurring:
                 event['recurrence'] = ['RRULE:FREQ=YEARLY']
-            
+
             event = service.events().insert(
                 calendarId='primary',
                 body=event
             ).execute()
-            
+
             # Store event ID for future reference
             wishlist.calendar_event_id = event['id']
             wishlist.save(update_fields=['calendar_event_id'])
-            
+
             return True
-            
+
         except Exception as e:
             print(f"Error adding event to calendar: {str(e)}")
             return False
@@ -108,20 +109,20 @@ class CalendarIntegration:
         """Update existing calendar event"""
         if not wishlist.calendar_event_id:
             return CalendarIntegration.add_to_calendar(wishlist, user_id)
-            
+
         try:
             creds = CalendarIntegration.get_credentials(user_id)
             if not creds:
                 return False
 
             service = build('calendar', 'v3', credentials=creds)
-            
+
             # Get existing event
             event = service.events().get(
                 calendarId='primary',
                 eventId=wishlist.calendar_event_id
             ).execute()
-            
+
             # Update event details
             event['summary'] = wishlist.title
             event['description'] = (
@@ -130,15 +131,15 @@ class CalendarIntegration:
             )
             event['start']['date'] = wishlist.occasion_date.isoformat()
             event['end']['date'] = wishlist.occasion_date.isoformat()
-            
+
             updated_event = service.events().update(
                 calendarId='primary',
                 eventId=wishlist.calendar_event_id,
                 body=event
             ).execute()
-            
+
             return bool(updated_event)
-            
+
         except Exception as e:
             print(f"Error updating calendar event: {str(e)}")
             return False
@@ -148,24 +149,24 @@ class CalendarIntegration:
         """Remove wishlist occasion from calendar"""
         if not wishlist.calendar_event_id:
             return True
-            
+
         try:
             creds = CalendarIntegration.get_credentials(user_id)
             if not creds:
                 return False
 
             service = build('calendar', 'v3', credentials=creds)
-            
+
             service.events().delete(
                 calendarId='primary',
                 eventId=wishlist.calendar_event_id
             ).execute()
-            
+
             wishlist.calendar_event_id = None
             wishlist.save(update_fields=['calendar_event_id'])
-            
+
             return True
-            
+
         except Exception as e:
             print(f"Error removing calendar event: {str(e)}")
             return False

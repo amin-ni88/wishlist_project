@@ -2,15 +2,17 @@ from rest_framework import serializers
 from core.models.guest import GuestContributor, GuestContribution, GuestAccessToken
 from core.models import WishListItem
 
+
 class GuestContributorSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestContributor
         fields = ('id', 'name', 'email')
         read_only_fields = ('id',)
 
+
 class GuestContributionSerializer(serializers.ModelSerializer):
     guest = GuestContributorSerializer()
-    
+
     class Meta:
         model = GuestContribution
         fields = (
@@ -29,6 +31,7 @@ class GuestContributionSerializer(serializers.ModelSerializer):
             guest=guest,
             **validated_data
         )
+
 
 class GuestAccessTokenSerializer(serializers.ModelSerializer):
     class Meta:

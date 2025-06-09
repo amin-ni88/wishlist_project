@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from core.models import Plan, UserSubscription
 
+
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
@@ -21,10 +22,11 @@ class PlanSerializer(serializers.ModelSerializer):
             'is_active'
         ]
 
+
 class UserSubscriptionSerializer(serializers.ModelSerializer):
     plan = PlanSerializer(read_only=True)
     days_remaining = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = UserSubscription
         fields = [
@@ -43,12 +45,13 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         """Calculate days remaining in subscription"""
         if not obj.is_active:
             return 0
-        
+
         today = timezone.now().date()
         if today > obj.end_date:
             return 0
-            
+
         return (obj.end_date - today).days
+
 
 class SubscriptionPurchaseSerializer(serializers.Serializer):
     plan_id = serializers.IntegerField()
@@ -65,19 +68,20 @@ class SubscriptionPurchaseSerializer(serializers.Serializer):
         try:
             plan = Plan.objects.get(id=value, is_active=True)
         except Plan.DoesNotExist:
-            raise serializers.ValidationError("Invalid or inactive plan selected")
+            raise serializers.ValidationError(
+                "Invalid or inactive plan selected")
         return value
 
     def validate(self, data):
         """Validate plan price for duration"""
         plan = Plan.objects.get(id=data['plan_id'])
         price = plan.get_price(data['duration_type'])
-        
+
         if not price:
             raise serializers.ValidationError(
                 f"Selected plan does not support {data['duration_type']} duration"
             )
-            
+
         # Check wallet balance if paying with wallet
         if data['payment_method'] == 'WALLET':
             user = self.context['request'].user
@@ -85,6 +89,6 @@ class SubscriptionPurchaseSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "Insufficient wallet balance"
                 )
-                
+
         data['price'] = price
         return data

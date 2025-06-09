@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from core.models import WishList, WishListItem
 import json
 
+
 class WishListViewTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -13,7 +14,7 @@ class WishListViewTests(TestCase):
             password='testpass123'
         )
         self.client.login(username='testuser', password='testpass123')
-        
+
     def test_create_wishlist(self):
         response = self.client.post(
             reverse('create_wishlist'),
@@ -27,7 +28,7 @@ class WishListViewTests(TestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content)
         self.assertEqual(data['title'], 'New Wishlist')
-        
+
     def test_list_wishlists(self):
         WishList.objects.create(
             owner=self.user,
@@ -38,6 +39,7 @@ class WishListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(len(data), 1)
+
 
 class WishListItemViewTests(TestCase):
     def setUp(self):
@@ -52,10 +54,11 @@ class WishListItemViewTests(TestCase):
             owner=self.user,
             title="Test Wishlist"
         )
-        
+
     def test_add_item(self):
         response = self.client.post(
-            reverse('add_wishlist_item', kwargs={'wishlist_id': self.wishlist.id}),
+            reverse('add_wishlist_item', kwargs={
+                    'wishlist_id': self.wishlist.id}),
             {
                 'name': 'New Item',
                 'price': 99.99,
@@ -67,6 +70,7 @@ class WishListItemViewTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(data['name'], 'New Item')
 
+
 class PaymentViewTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -76,7 +80,7 @@ class PaymentViewTests(TestCase):
             password='testpass123'
         )
         self.client.login(username='testuser', password='testpass123')
-        
+
     def test_create_payment(self):
         response = self.client.post(
             reverse('create_payment'),
@@ -89,6 +93,7 @@ class PaymentViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertIn('payment_url', data)
+
 
 class BulkOperationsViewTests(TestCase):
     def setUp(self):
@@ -103,7 +108,7 @@ class BulkOperationsViewTests(TestCase):
             owner=self.user,
             title="Test Wishlist"
         )
-        
+
     def test_bulk_create_items(self):
         items_data = [
             {
@@ -118,7 +123,8 @@ class BulkOperationsViewTests(TestCase):
             }
         ]
         response = self.client.post(
-            reverse('bulk_create_items', kwargs={'wishlist_id': self.wishlist.id}),
+            reverse('bulk_create_items', kwargs={
+                    'wishlist_id': self.wishlist.id}),
             json.dumps(items_data),
             content_type='application/json'
         )

@@ -11,16 +11,17 @@ from core.models import WishList, WishListItem
 from core.serializers import WishListSerializer, WishListItemSerializer
 from django.utils import timezone
 
+
 class GuestContributionViewSet(viewsets.ModelViewSet):
     """ViewSet for guest contributions"""
     serializer_class = GuestContributionSerializer
-    
+
     def get_queryset(self):
         # Only show contributions for items the guest has access to
         token = self.request.query_params.get('access_token')
         if not token:
             return GuestContribution.objects.none()
-            
+
         try:
             access = GuestAccessToken.objects.get(
                 token=token,
@@ -45,16 +46,17 @@ class GuestContributionViewSet(viewsets.ModelViewSet):
                 {'error': 'Invalid or expired access token'},
                 status=status.HTTP_403_FORBIDDEN
             )
-        
+
         # Create contribution
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        
+
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED
         )
+
 
 class BulkOperationsViewSet(viewsets.ViewSet):
     """ViewSet for bulk operations on wishlists and items"""
@@ -65,7 +67,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
         """Create multiple items at once"""
         items_data = request.data.get('items', [])
         wishlist_id = request.data.get('wishlist_id')
-        
+
         try:
             wishlist = WishList.objects.get(
                 id=wishlist_id,
@@ -76,14 +78,14 @@ class BulkOperationsViewSet(viewsets.ViewSet):
                 {'error': 'Wishlist not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         # Check subscription limits
         if not request.user.check_subscription_limits():
             return Response(
                 {'error': 'Item limit reached'},
                 status=status.HTTP_403_FORBIDDEN
             )
-        
+
         created_items = []
         with transaction.atomic():
             for item_data in items_data:
@@ -92,7 +94,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
                 if serializer.is_valid():
                     item = serializer.save()
                     created_items.append(item)
-        
+
         return Response(
             WishListItemSerializer(created_items, many=True).data,
             status=status.HTTP_201_CREATED
@@ -103,13 +105,13 @@ class BulkOperationsViewSet(viewsets.ViewSet):
         """Update multiple items at once"""
         items_data = request.data.get('items', [])
         updated_items = []
-        
+
         with transaction.atomic():
             for item_data in items_data:
                 item_id = item_data.pop('id', None)
                 if not item_id:
                     continue
-                    
+
                 try:
                     item = WishListItem.objects.get(
                         id=item_id,
@@ -125,7 +127,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
                         updated_items.append(item)
                 except WishListItem.DoesNotExist:
                     continue
-        
+
         return Response(
             WishListItemSerializer(updated_items, many=True).data
         )
@@ -134,12 +136,12 @@ class BulkOperationsViewSet(viewsets.ViewSet):
     def bulk_delete_items(self, request):
         """Delete multiple items at once"""
         item_ids = request.data.get('item_ids', [])
-        
+
         deleted_count = WishListItem.objects.filter(
             id__in=item_ids,
             wishlist__owner=request.user
         ).delete()[0]
-        
+
         return Response({
             'deleted_count': deleted_count
         })
@@ -150,7 +152,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
         source = request.data.get('source')
         data = request.data.get('data')
         wishlist_id = request.data.get('wishlist_id')
-        
+
         try:
             wishlist = WishList.objects.get(
                 id=wishlist_id,
@@ -161,7 +163,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
                 {'error': 'Wishlist not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         # Process import based on source
         if source == 'csv':
             items = self._process_csv_import(data)
@@ -172,7 +174,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
                 {'error': 'Unsupported import source'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         # Create items
         created_items = []
         for item_data in items:
@@ -181,7 +183,7 @@ class BulkOperationsViewSet(viewsets.ViewSet):
             if serializer.is_valid():
                 item = serializer.save()
                 created_items.append(item)
-        
+
         return Response(
             WishListItemSerializer(created_items, many=True).data,
             status=status.HTTP_201_CREATED

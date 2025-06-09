@@ -11,15 +11,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class PricePoint:
     price: float
     timestamp: datetime
     source: str
 
+
 class PriceTracker:
     """Service for tracking item prices across different platforms"""
-    
+
     SUPPORTED_DOMAINS = {
         'digikala.com': 'extract_digikala_price',
         'amazon.com': 'extract_amazon_price',
@@ -35,13 +37,13 @@ class PriceTracker:
         try:
             domain = urlparse(item.product_url).netloc
             method_name = PriceTracker.SUPPORTED_DOMAINS.get(domain)
-            
+
             if not method_name:
                 return False
 
             method = getattr(PriceTracker, method_name)
             current_price = method(item.product_url)
-            
+
             if current_price:
                 history = item.price_history or []
                 history.append({
@@ -49,11 +51,11 @@ class PriceTracker:
                     'timestamp': timezone.now().isoformat(),
                     'source': domain
                 })
-                
+
                 item.price_history = history
                 item.save(update_fields=['price_history'])
                 return True
-                
+
         except Exception as e:
             logger.error(f"Error updating price for item {item.id}: {str(e)}")
             return False
@@ -67,13 +69,13 @@ class PriceTracker:
             }
             response = requests.get(url, headers=headers, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
-            
+
             price_elem = soup.find('div', {'class': 'product-price'})
             if price_elem:
                 price_text = price_elem.text.strip()
                 return float(price_text.replace(',', '').replace('تومان', ''))
             return None
-            
+
         except Exception:
             return None
 
@@ -94,18 +96,19 @@ class PriceTracker:
             'history': history
         }
 
+
 class SimilarItemsFinder:
     """Service for finding similar items"""
-    
+
     @staticmethod
     def find_similar_items(item: WishListItem, limit: int = 5) -> List[WishListItem]:
         """Find similar items based on various criteria"""
         queryset = WishListItem.objects.exclude(id=item.id)
-        
+
         # Find items in same category
         if item.category:
             queryset = queryset.filter(category=item.category)
-        
+
         # Find items with similar price range (±20%)
         if item.price:
             price_range = item.price * 0.2
@@ -113,14 +116,14 @@ class SimilarItemsFinder:
                 price__gte=item.price - price_range,
                 price__lte=item.price + price_range
             )
-        
+
         # Find items with similar tags
         if item.tags.exists():
             queryset = queryset.filter(tags__in=item.tags.all())
-        
+
         # Order by relevance (number of matching criteria)
         queryset = queryset.annotate(
             relevance=Count('tags', filter=Q(tags__in=item.tags.all()))
         ).order_by('-relevance')
-        
+
         return queryset[:limit]

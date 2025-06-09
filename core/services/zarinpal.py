@@ -3,10 +3,11 @@ import requests
 from typing import Optional, Tuple
 from django.conf import settings
 
+
 class ZarinpalGateway:
     SANDBOX_URL = "https://sandbox.zarinpal.com/pg/rest/WebGate/"
     MAIN_URL = "https://www.zarinpal.com/pg/rest/WebGate/"
-    
+
     def __init__(self, merchant_id: str, callback_url: str, sandbox: bool = False):
         self.merchant_id = merchant_id
         self.callback_url = callback_url
@@ -31,7 +32,7 @@ class ZarinpalGateway:
             "Email": email,
             "Mobile": mobile
         }
-        
+
         try:
             response = requests.post(
                 f"{self.base_url}PaymentRequest.json",
@@ -39,11 +40,11 @@ class ZarinpalGateway:
                 timeout=10
             )
             result = response.json()
-            
+
             if result["Status"] == 100:
                 return True, result["Authority"]
             return False, f"Error {result['Status']}: {result['Message']}"
-            
+
         except requests.exceptions.RequestException as e:
             return False, f"Connection error: {str(e)}"
         except json.JSONDecodeError:
@@ -63,7 +64,7 @@ class ZarinpalGateway:
             "Authority": authority,
             "Amount": amount
         }
-        
+
         try:
             response = requests.post(
                 f"{self.base_url}PaymentVerification.json",
@@ -71,11 +72,11 @@ class ZarinpalGateway:
                 timeout=10
             )
             result = response.json()
-            
+
             if result["Status"] == 100:
                 return True, result["RefID"], str(result["Status"])
             return False, f"Error: {result['Message']}", str(result["Status"])
-            
+
         except requests.exceptions.RequestException as e:
             return False, f"Connection error: {str(e)}", None
         except json.JSONDecodeError:

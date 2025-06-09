@@ -10,6 +10,7 @@ from core.models import Contribution, WishListItem
 from core.serializers.contribution import ContributionSerializer
 from core.permissions import IsWishListOwnerOrContributor
 
+
 class ContributionViewSet(viewsets.ModelViewSet):
     serializer_class = ContributionSerializer
     permission_classes = [IsAuthenticated]
@@ -21,7 +22,7 @@ class ContributionViewSet(viewsets.ModelViewSet):
                 item = WishListItem.objects.get(id=self.kwargs['item_id'])
                 if item.wishlist.owner == self.request.user:
                     return Contribution.objects.filter(item_id=self.kwargs['item_id'])
-            
+
             # Show only own contributions for others
             return Contribution.objects.filter(contributor=self.request.user)
         return Contribution.objects.none()
@@ -35,7 +36,7 @@ class ContributionViewSet(viewsets.ModelViewSet):
                 {'error': 'Item ID is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+
         try:
             item = WishListItem.objects.get(id=item_id)
         except WishListItem.DoesNotExist:
@@ -43,13 +44,13 @@ class ContributionViewSet(viewsets.ModelViewSet):
                 {'error': 'Item not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-            
+
         serializer = self.get_serializer(
             data=request.data,
             context={'request': request, 'item': item}
         )
         serializer.is_valid(raise_exception=True)
-        
+
         try:
             with transaction.atomic():
                 contribution = serializer.save(item=item)
@@ -73,11 +74,12 @@ class ContributionViewSet(viewsets.ModelViewSet):
                 {'error': 'Item not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-            
+
         contributions = Contribution.objects.filter(item=item)
         total = contributions.aggregate(Sum('amount'))['amount__sum'] or 0
-        contributor_count = contributions.values('contributor').distinct().count()
-        
+        contributor_count = contributions.values(
+            'contributor').distinct().count()
+
         return Response({
             'total_amount': total,
             'remaining_amount': max(0, item.price - total),

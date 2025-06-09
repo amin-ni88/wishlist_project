@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from core.models import WishList, WishListItem, Contribution, Notification, Plan, Subscription
 
+
 class WishListModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -10,7 +11,7 @@ class WishListModelTests(TestCase):
             email='test@example.com',
             password='testpass123'
         )
-        
+
     def test_wishlist_creation(self):
         wishlist = WishList.objects.create(
             owner=self.user,
@@ -36,6 +37,7 @@ class WishListModelTests(TestCase):
         self.assertEqual(item.name, "Gaming Console")
         self.assertEqual(float(item.price), 499.99)
 
+
 class ContributionModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -57,7 +59,7 @@ class ContributionModelTests(TestCase):
             name="Gaming Console",
             price=499.99
         )
-        
+
     def test_contribution_creation(self):
         contribution = Contribution.objects.create(
             item=self.item,
@@ -67,6 +69,7 @@ class ContributionModelTests(TestCase):
         self.assertEqual(float(contribution.amount), 50.00)
         self.assertEqual(contribution.contributor, self.contributor)
 
+
 class NotificationModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -74,16 +77,18 @@ class NotificationModelTests(TestCase):
             email='test@example.com',
             password='testpass123'
         )
-        
+
     def test_notification_creation(self):
         notification = Notification.objects.create(
             user=self.user,
             message="You received a new contribution!",
             notification_type="CONTRIBUTION"
         )
-        self.assertEqual(notification.message, "You received a new contribution!")
+        self.assertEqual(notification.message,
+                         "You received a new contribution!")
         self.assertEqual(notification.notification_type, "CONTRIBUTION")
         self.assertFalse(notification.is_read)
+
 
 class PlanAndSubscriptionTests(TestCase):
     def setUp(self):
@@ -97,7 +102,7 @@ class PlanAndSubscriptionTests(TestCase):
             price=9.99,
             features=["unlimited wishlists", "priority support"]
         )
-        
+
     def test_subscription_creation(self):
         subscription = Subscription.objects.create(
             user=self.user,

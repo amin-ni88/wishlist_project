@@ -4,11 +4,12 @@ from .models import WishList, WishListItem, Contribution, Notification, Plan, Us
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 
-                 'phone_number', 'bio', 'avatar', 'wallet_balance')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name',
+                  'phone_number', 'bio', 'avatar', 'wallet_balance')
         read_only_fields = ('wallet_balance',)
         extra_kwargs = {
             'password': {'write_only': True}
@@ -22,39 +23,44 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
+
 class WishListItemSerializer(serializers.ModelSerializer):
     total_contributions = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True)
     remaining_amount = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True)
-    
+
     class Meta:
         model = WishListItem
         fields = '__all__'
         read_only_fields = ('status',)
 
+
 class WishListSerializer(serializers.ModelSerializer):
     items = WishListItemSerializer(many=True, read_only=True)
     owner = UserSerializer(read_only=True)
-    
+
     class Meta:
         model = WishList
         fields = '__all__'
         read_only_fields = ('owner',)
 
+
 class ContributionSerializer(serializers.ModelSerializer):
     contributor = UserSerializer(read_only=True)
-    
+
     class Meta:
         model = Contribution
         fields = '__all__'
         read_only_fields = ('contributor',)
+
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
         read_only_fields = ('user',)
+
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,7 +71,7 @@ class PlanSerializer(serializers.ModelSerializer):
 class UserSubscriptionSerializer(serializers.ModelSerializer):
     plan = PlanSerializer(read_only=True)
     plan_id = serializers.IntegerField(write_only=True)
-    
+
     class Meta:
         model = UserSubscription
         fields = (

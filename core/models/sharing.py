@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class WishListShare(models.Model):
     """Model for tracking wishlist shares"""
     wishlist = models.ForeignKey(

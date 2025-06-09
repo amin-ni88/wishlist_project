@@ -13,6 +13,7 @@ from core.serializers.payment import (
     WalletTransferRequestSerializer
 )
 
+
 class WalletViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = TransactionSerializer
@@ -32,10 +33,10 @@ class WalletViewSet(viewsets.GenericViewSet):
         """Charge wallet using payment gateway"""
         serializer = WalletChargeRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         amount = serializer.validated_data['amount']
         payment_service = PaymentService()
-        
+
         try:
             transaction = payment_service.create_wallet_transaction(
                 user=request.user,
@@ -43,13 +44,13 @@ class WalletViewSet(viewsets.GenericViewSet):
                 transaction_type='WALLET_CHARGE',
                 payment_method='ONLINE'
             )
-            
+
             # Get payment URL from payment gateway
             payment_url = payment_service.get_payment_url(
                 amount=amount,
                 callback_url=f"/api/wallet/verify/{transaction.reference_id}/"
             )
-            
+
             return Response({
                 'transaction_id': transaction.reference_id,
                 'payment_url': payment_url
@@ -65,24 +66,24 @@ class WalletViewSet(viewsets.GenericViewSet):
         """Transfer money from wallet to another user"""
         serializer = WalletTransferRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         recipient = serializer.validated_data['recipient']
         amount = serializer.validated_data['amount']
-        
+
         if request.user.wallet_balance < amount:
             return Response(
                 {'error': _('Insufficient balance')},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         try:
             with transaction.atomic():
                 # Deduct from sender
                 request.user.deduct_from_wallet(amount)
-                
+
                 # Add to recipient
                 recipient.add_to_wallet(amount)
-                
+
                 # Create transactions for both parties
                 payment_service = PaymentService()
                 sender_transaction = payment_service.create_wallet_transaction(
@@ -91,19 +92,19 @@ class WalletViewSet(viewsets.GenericViewSet):
                     transaction_type='WALLET_TRANSFER_SENT',
                     description=f'Transfer to {recipient.username}'
                 )
-                
+
                 recipient_transaction = payment_service.create_wallet_transaction(
                     user=recipient,
                     amount=amount,
                     transaction_type='WALLET_TRANSFER_RECEIVED',
                     description=f'Transfer from {request.user.username}'
                 )
-                
+
                 return Response({
                     'message': _('Transfer successful'),
                     'transaction_id': sender_transaction.reference_id
                 })
-                
+
         except Exception as e:
             return Response(
                 {'error': str(e)},

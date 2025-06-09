@@ -18,7 +18,8 @@ from .views.bulk_operations import (
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'wishlists', EnhancedWishListViewSet, basename='wishlist')
-router.register(r'items', EnhancedWishListItemViewSet, basename='wishlist-item')
+router.register(r'items', EnhancedWishListItemViewSet,
+                basename='wishlist-item')
 router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'plans', PlanViewSet, basename='plan')
 router.register(
@@ -28,7 +29,6 @@ router.register(
 )
 router.register(r'analytics', AnalyticsViewSet, basename='analytics')
 
-from .views.payment import PaymentVerificationView
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -5,6 +5,7 @@ from django.utils import timezone
 from core.models import Transaction, PaymentGateway, UserSubscription, Plan
 from core.models.payment import Transaction
 
+
 class PaymentService:
     @staticmethod
     def create_wallet_transaction(
@@ -34,7 +35,7 @@ class PaymentService:
     ) -> tuple[Transaction, UserSubscription]:
         """Process a plan purchase"""
         amount = plan.get_price(duration_type)
-        
+
         # Calculate subscription duration
         if duration_type == 'MONTHLY':
             duration = timezone.timedelta(days=30)
@@ -42,7 +43,7 @@ class PaymentService:
             duration = timezone.timedelta(days=365)
         else:  # LIFETIME
             duration = timezone.timedelta(days=36500)  # 100 years
-        
+
         # Create transaction
         transaction = Transaction.objects.create(
             user=user,
@@ -54,7 +55,7 @@ class PaymentService:
             reference_id=f'P-{timezone.now().timestamp()}',
             description=f'Purchase of {plan.name} plan ({duration_type})'
         )
-        
+
         # Create subscription (will be activated after payment)
         subscription = UserSubscription.objects.create(
             user=user,
@@ -64,7 +65,7 @@ class PaymentService:
             is_active=False,
             auto_renew=duration_type != 'LIFETIME'
         )
-        
+
         return transaction, subscription
 
     @staticmethod
@@ -78,7 +79,7 @@ class PaymentService:
             transaction = Transaction.objects.get(reference_id=reference_id)
             transaction.status = status
             transaction.save()
-            
+
             if status == 'SUCCESS':
                 if transaction.transaction_type == 'PLAN_PURCHASE':
                     # Activate subscription
@@ -89,13 +90,13 @@ class PaymentService:
                     )
                     subscription.is_active = True
                     subscription.save()
-                
+
                 elif transaction.transaction_type == 'WALLET_CHARGE':
                     # Update user's wallet balance
                     user = transaction.user
                     user.wallet_balance += transaction.amount
                     user.save()
-            
+
             return transaction
         except Transaction.DoesNotExist:
             return None

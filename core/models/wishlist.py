@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 from core.services.file_upload import FileUploadService
 from .user import User
 
+
 class WishList(models.Model):
     """Model for wishlists"""
     owner = models.ForeignKey(
@@ -23,7 +24,7 @@ class WishList(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def save(self, *args, **kwargs):
         # Process cover image if provided
         if hasattr(self, '_cover_image_file') and self._cover_image_file:
@@ -34,21 +35,22 @@ class WishList(models.Model):
                     folder='wishlist_covers',
                     generate_thumbnails=True
                 )
-                
+
                 # Delete old image if exists
                 if self.cover_image:
                     upload_service.delete_image(self.cover_image['original'])
-                    
+
                 self.cover_image = image_data
             except Exception as e:
                 print(f"Error processing cover image: {e}")
-                
+
             delattr(self, '_cover_image_file')
-            
+
         super().save(*args, **kwargs)
-    
+
     def __str__(self):
         return f"{self.title} by {self.owner.username}"
+
 
 class WishListItem(models.Model):
     """Model for items in wishlists"""
@@ -57,7 +59,7 @@ class WishListItem(models.Model):
         ('MEDIUM', 'Medium'),
         ('HIGH', 'High')
     ]
-    
+
     wishlist = models.ForeignKey(
         WishList,
         on_delete=models.CASCADE,
@@ -99,14 +101,14 @@ class WishListItem(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def save(self, *args, **kwargs):
         # Process images if provided
         if hasattr(self, '_image_files') and self._image_files:
             try:
                 upload_service = FileUploadService()
                 image_data_list = []
-                
+
                 for image_file in self._image_files:
                     image_data = upload_service.upload_image(
                         image_file,
@@ -114,18 +116,18 @@ class WishListItem(models.Model):
                         generate_thumbnails=True
                     )
                     image_data_list.append(image_data)
-                
+
                 # Delete old images if they exist
                 if self.images:
                     for old_image in self.images:
                         upload_service.delete_image(old_image['original'])
-                
+
                 self.images = image_data_list
             except Exception as e:
                 print(f"Error processing images: {e}")
-            
+
             delattr(self, '_image_files')
-        
+
         # Notify price change if significant
         if self.pk:  # If this is an update
             old_instance = WishListItem.objects.get(pk=self.pk)
@@ -136,21 +138,21 @@ class WishListItem(models.Model):
                     float(old_instance.price),
                     float(self.price)
                 )
-        
+
         super().save(*args, **kwargs)
-    
+
     @property
     def total_contributions(self):
         """Calculate total contributions received"""
         return self.contributions.aggregate(
             total=models.Sum('amount')
         )['total'] or 0
-    
+
     @property
     def remaining_amount(self):
         """Calculate remaining amount needed"""
         return max(0, self.price - self.total_contributions)
-    
+
     def __str__(self):
         return f"{self.name} in {self.wishlist.title}"
 
