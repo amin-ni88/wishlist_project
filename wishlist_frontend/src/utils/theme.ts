@@ -1,15 +1,10 @@
 import { MD3LightTheme as DefaultTheme } from 'react-native-paper';
 import { I18nManager } from 'react-native';
-import { fonts, fontConfig } from './fonts';
 
 export const theme = {
   ...DefaultTheme,
   isRTL: true,
   writingDirection: 'rtl' as const,
-  fonts: {
-    ...DefaultTheme.fonts,
-    ...fontConfig.android, // We'll use android config for both platforms
-  },
   colors: {
     ...DefaultTheme.colors,
     primary: '#17A6A3',    // Turquoise

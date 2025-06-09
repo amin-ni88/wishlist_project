@@ -1,8 +1,5 @@
 {
   "expo": {
-    "name": "آرزوها",
-    "slug": "wishlist-frontend",
-    "primaryColor": "#17A6A3", "expo": {
     "name": "wishlist_frontend",
     "slug": "wishlist_frontend",
     "version": "1.0.0",
