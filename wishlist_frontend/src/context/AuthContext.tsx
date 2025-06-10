@@ -1,86 +1,84 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContextType, UserType } from '../types/auth';
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  login: (userData: User, accessToken: string) => void;
+  logout: () => void;
+  isLoading: boolean;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadStoredAuth();
+    checkAuthState();
   }, []);
 
-  const loadStoredAuth = async () => {
+  const checkAuthState = async () => {
     try {
-      const storedToken = await AsyncStorage.getItem('token');
+      const storedToken = await AsyncStorage.getItem('access_token');
       const storedUser = await AsyncStorage.getItem('user');
-      
+
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {
-      console.error('Error loading stored auth:', error);
+      console.error('Error checking auth state:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const login = async (newToken: string, userData: UserType) => {
-    try {
-      await AsyncStorage.setItem('token', newToken);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      setToken(newToken);
-      setUser(userData);
-    } catch (error) {
-      console.error('Error storing auth data:', error);
-      throw error;
-    }
+  const login = (userData: User, accessToken: string) => {
+    setUser(userData);
+    setToken(accessToken);
   };
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('user');
-      setToken(null);
+      await AsyncStorage.multiRemove(['access_token', 'refresh_token', 'user']);
       setUser(null);
+      setToken(null);
     } catch (error) {
-      console.error('Error removing auth data:', error);
-      throw error;
+      console.error('Error during logout:', error);
     }
   };
 
-  const updateUser = async (userData: Partial<UserType>) => {
-    try {
-      const updatedUser = { ...user, ...userData };
-      await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
-      setUser(updatedUser);
-    } catch (error) {
-      console.error('Error updating user data:', error);
-      throw error;
-    }
+  const value: AuthContextType = {
+    user,
+    token,
+    login,
+    logout,
+    isLoading,
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        loading,
-        login,
-        logout,
-        updateUser,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');

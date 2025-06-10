@@ -25,7 +25,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('core.urls')),
+    path('api/', include('api.urls')),
+    path('', include('core.urls')),
+    path('api/payment/', include('payment.urls')),
     path(
         'api/token/',
         TokenObtainPairView.as_view(),
@@ -46,4 +48,16 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+
+# Admin site customization
+admin.site.site_header = 'Wishlist Platform Admin'
+admin.site.site_title = 'Wishlist Platform'
+admin.site.index_title = 'مدیریت پلتفرم لیست آرزوها'

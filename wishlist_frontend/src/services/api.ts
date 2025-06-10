@@ -1,10 +1,11 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://localhost:8000/api'; // Change this to your actual API URL
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -13,7 +14,7 @@ const api = axios.create({
 // Add a request interceptor to add the auth token
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,97 +30,105 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      await AsyncStorage.multiRemove(['token', 'user']);
-      // You might want to trigger a navigation to login screen here
+      await AsyncStorage.removeItem('access_token');
+      await AsyncStorage.removeItem('refresh_token');
     }
     return Promise.reject(error);
   }
 );
 
-export const authService = {
-  login: async (email: string, password: string) => {
-    const response = await api.post('/auth/login/', { email, password });
-    return response.data;
-  },
-
-  register: async (userData: {
+export const authAPI = {
+  login: (credentials: { username: string; password: string }) =>
+    api.post('/auth/login/', credentials),
+  
+  register: (userData: {
+    username: string;
     email: string;
     password: string;
-    username: string;
-    firstName?: string;
-    lastName?: string;
-  }) => {
-    const response = await api.post('/auth/register/', userData);
-    return response.data;
-  },
-
-  logout: async () => {
-    const response = await api.post('/auth/logout/');
-    return response.data;
-  },
+    first_name?: string;
+    last_name?: string;
+  }) => api.post('/auth/register/', userData),
+  
+  refreshToken: (refresh: string) =>
+    api.post('/auth/token/refresh/', { refresh }),
+  
+  logout: () => api.post('/auth/logout/'),
 };
 
-export const wishlistService = {
-  getWishlists: async () => {
-    const response = await api.get('/wishlists/');
-    return response.data;
-  },
-
-  getWishlistById: async (id: number) => {
-    const response = await api.get(`/wishlists/${id}/`);
-    return response.data;
-  },
-
-  createWishlist: async (data: {
+export const wishlistAPI = {
+  getWishlists: () => api.get('/wishlists/'),
+  
+  getWishlist: (id: number) => api.get(`/wishlists/${id}/`),
+  
+  createWishlist: (data: {
     title: string;
     description?: string;
-    isPrivate: boolean;
-  }) => {
-    const response = await api.post('/wishlists/', data);
-    return response.data;
-  },
+    occasion_date?: string;
+    is_public?: boolean;
+  }) => api.post('/wishlists/', data),
+  
+  updateWishlist: (id: number, data: any) =>
+    api.patch(`/wishlists/${id}/`, data),
+  
+  deleteWishlist: (id: number) => api.delete(`/wishlists/${id}/`),
+};
 
-  updateWishlist: async (id: number, data: {
-    title?: string;
+export const itemAPI = {
+  getItems: (wishlistId?: number) => {
+    const params = wishlistId ? { wishlist: wishlistId } : {};
+    return api.get('/items/', { params });
+  },
+  
+  getItem: (id: number) => api.get(`/items/${id}/`),
+  
+  createItem: (data: {
+    wishlist: number;
+    name: string;
     description?: string;
-    isPrivate?: boolean;
-  }) => {
-    const response = await api.patch(`/wishlists/${id}/`, data);
-    return response.data;
-  },
-
-  deleteWishlist: async (id: number) => {
-    const response = await api.delete(`/wishlists/${id}/`);
-    return response.data;
-  },
+    price: number;
+    product_url?: string;
+    priority?: number;
+  }) => api.post('/items/', data),
+  
+  updateItem: (id: number, data: any) => api.patch(`/items/${id}/`, data),
+  
+  deleteItem: (id: number) => api.delete(`/items/${id}/`),
+  
+  contribute: (id: number, data: {
+    amount: number;
+    message?: string;
+    is_anonymous?: boolean;
+  }) => api.post(`/items/${id}/contribute/`, data),
+  
+  getItemContributors: (id: number) => api.get(`/items/${id}/contributors/`),
 };
 
-export const contributionService = {
-  contribute: async (wishlistItemId: number, amount: number) => {
-    const response = await api.post(`/contributions/`, {
-      wishlist_item: wishlistItemId,
-      amount,
-    });
-    return response.data;
-  },
-
-  getContributions: async (wishlistItemId: number) => {
-    const response = await api.get(`/contributions/${wishlistItemId}/`);
-    return response.data;
-  },
+export const userAPI = {
+  getProfile: () => api.get('/users/me/'),
+  
+  updateProfile: (data: any) => api.patch('/users/me/', data),
+  
+  getNotifications: () => api.get('/notifications/'),
+  
+  markNotificationRead: (id: number) =>
+    api.post(`/notifications/${id}/mark_read/`),
+  
+  getTransactions: () => api.get('/transactions/'),
+  
+  changePassword: (data: { old_password: string; new_password: string }) =>
+    api.post('/auth/change-password/', data),
 };
 
-export const notificationService = {
-  getNotifications: async () => {
-    const response = await api.get('/notifications/');
-    return response.data;
-  },
-
-  markAsRead: async (notificationId: number) => {
-    const response = await api.patch(`/notifications/${notificationId}/read/`);
-    return response.data;
-  },
+export const planAPI = {
+  getPlans: () => api.get('/plans/'),
+  
+  getSubscription: () => api.get('/subscriptions/'),
+  
+  subscribe: (planId: number) =>
+    api.post('/subscriptions/', { plan_id: planId }),
+  
+  cancelSubscription: (id: number) =>
+    api.post(`/subscriptions/${id}/cancel/`),
 };
 
 export default api;

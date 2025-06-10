@@ -1,101 +1,151 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
-import { theme } from '../../utils/theme';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import {
+  TextInput,
+  Button,
+  Title,
+  Card,
+  Text,
+  ActivityIndicator,
+} from 'react-native-paper';
+import { useAuth } from '../../context/AuthContext';
+import { authAPI } from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+interface LoginScreenProps {
+  navigation: any;
+}
+
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleLogin = () => {
-    // Handle login logic
+  const handleLogin = async () => {
+    if (!username.trim() || !password.trim()) {
+      Alert.alert('خطا', 'لطفا نام کاربری و رمز عبور را وارد کنید');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await authAPI.login({ username, password });
+      const { access, refresh, user } = response.data;
+
+      await AsyncStorage.setItem('access_token', access);
+      await AsyncStorage.setItem('refresh_token', refresh);
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+
+      login(user, access);
+      navigation.replace('Main');
+    } catch (error: any) {
+      console.error('Login error:', error);
+      Alert.alert(
+        'خطا در ورود',
+        error.response?.data?.detail || 'نام کاربری یا رمز عبور اشتباه است'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Text style={styles.title}>آرزوها</Text>
-        <Text style={styles.subtitle}>لیست آرزوهای خود را مدیریت کنید</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Card style={styles.card}>
+          <Card.Content>
+            <Title style={styles.title}>ورود به حساب کاربری</Title>
+            
+            <TextInput
+              label="نام کاربری"
+              value={username}
+              onChangeText={setUsername}
+              mode="outlined"
+              style={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+              disabled={loading}
+            />
 
-      <View style={styles.formContainer}>
-        <TextInput
-          label="ایمیل"
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+            <TextInput
+              label="رمز عبور"
+              value={password}
+              onChangeText={setPassword}
+              mode="outlined"
+              secureTextEntry
+              style={styles.input}
+              disabled={loading}
+            />
 
-        <TextInput
-          label="رمز عبور"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-        />
+            <Button
+              mode="contained"
+              onPress={handleLogin}
+              style={styles.button}
+              disabled={loading}
+            >
+              {loading ? <ActivityIndicator color="white" /> : 'ورود'}
+            </Button>
 
-        <Button
-          mode="contained"
-          onPress={handleLogin}
-          style={styles.loginButton}
-          contentStyle={styles.loginButtonContent}
-        >
-          ورود
-        </Button>
-
-        <Button
-          mode="text"
-          onPress={() => navigation.navigate('Register')}
-          style={styles.registerButton}
-        >
-          ثبت‌نام
-        </Button>
-      </View>
-    </View>
+            <View style={styles.registerContainer}>
+              <Text>حساب کاربری ندارید؟ </Text>
+              <Button
+                mode="text"
+                onPress={() => navigation.navigate('Register')}
+                disabled={loading}
+              >
+                ثبت نام
+              </Button>
+            </View>
+          </Card.Content>
+        </Card>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
-import { useRTL, createRTLStyles } from '../../context/RightToLeftContext';
-
-const styles = createRTLStyles({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    padding: theme.spacing.lg,
+    backgroundColor: '#f5f5f5',
   },
-  logoContainer: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
+  },
+  card: {
+    elevation: 4,
+    borderRadius: 12,
   },
   title: {
-    ...theme.typography.h1,
-    color: theme.colors.primary,
-    marginBottom: theme.spacing.sm,
-  },
-  subtitle: {
-    ...theme.typography.body,
-    color: theme.colors.onSurface,
-  },
-  formContainer: {
-    flex: 2,
-    justifyContent: 'center',
+    textAlign: 'center',
+    marginBottom: 30,
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   input: {
-    marginBottom: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
+    marginBottom: 16,
   },
-  loginButton: {
-    marginTop: theme.spacing.md,
-    backgroundColor: theme.colors.accent,
+  button: {
+    marginTop: 16,
+    paddingVertical: 8,
   },
-  loginButtonContent: {
-    padding: theme.spacing.sm,
-  },
-  registerButton: {
-    marginTop: theme.spacing.md,
+  registerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
 

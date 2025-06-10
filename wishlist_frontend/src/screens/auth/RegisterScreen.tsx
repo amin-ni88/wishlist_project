@@ -1,119 +1,228 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
-import { theme } from '../../utils/theme';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import {
+  TextInput,
+  Button,
+  Title,
+  Card,
+  Text,
+  ActivityIndicator,
+} from 'react-native-paper';
+import { authAPI } from '../../services/api';
 
-const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+interface RegisterScreenProps {
+  navigation: any;
+}
 
-  const handleRegister = () => {
-    // Handle registration logic
+const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    first_name: '',
+    last_name: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const validateForm = () => {
+    if (!formData.username.trim()) {
+      Alert.alert('خطا', 'نام کاربری الزامی است');
+      return false;
+    }
+    if (!formData.email.trim()) {
+      Alert.alert('خطا', 'ایمیل الزامی است');
+      return false;
+    }
+    if (!formData.password.trim()) {
+      Alert.alert('خطا', 'رمز عبور الزامی است');
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      Alert.alert('خطا', 'رمز عبور و تکرار آن یکسان نیستند');
+      return false;
+    }
+    if (formData.password.length < 6) {
+      Alert.alert('خطا', 'رمز عبور باید حداقل ۶ کاراکتر باشد');
+      return false;
+    }
+    return true;
+  };
+
+  const handleRegister = async () => {
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      const { confirmPassword, ...registerData } = formData;
+      await authAPI.register(registerData);
+      
+      Alert.alert(
+        'موفقیت',
+        'حساب کاربری شما با موفقیت ایجاد شد. اکنون می‌توانید وارد شوید.',
+        [{ text: 'باشه', onPress: () => navigation.navigate('Login') }]
+      );
+    } catch (error: any) {
+      console.error('Register error:', error);
+      const errorMessage = error.response?.data?.detail || 
+                          error.response?.data?.username?.[0] ||
+                          error.response?.data?.email?.[0] ||
+                          'خطا در ثبت نام';
+      Alert.alert('خطا در ثبت نام', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.title}>ثبت‌نام</Text>
-        <Text style={styles.subtitle}>به جمع ما بپیوندید</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Card style={styles.card}>
+          <Card.Content>
+            <Title style={styles.title}>ثبت نام</Title>
+            
+            <TextInput
+              label="نام کاربری"
+              value={formData.username}
+              onChangeText={(value) => handleInputChange('username', value)}
+              mode="outlined"
+              style={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+              disabled={loading}
+            />
 
-      <View style={styles.formContainer}>
-        <TextInput
-          label="نام"
-          value={name}
-          onChangeText={setName}
-          style={styles.input}
-        />
+            <TextInput
+              label="ایمیل"
+              value={formData.email}
+              onChangeText={(value) => handleInputChange('email', value)}
+              mode="outlined"
+              style={styles.input}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              disabled={loading}
+            />
 
-        <TextInput
-          label="ایمیل"
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+            <View style={styles.nameContainer}>
+              <TextInput
+                label="نام"
+                value={formData.first_name}
+                onChangeText={(value) => handleInputChange('first_name', value)}
+                mode="outlined"
+                style={[styles.input, styles.halfInput]}
+                disabled={loading}
+              />
+              
+              <TextInput
+                label="نام خانوادگی"
+                value={formData.last_name}
+                onChangeText={(value) => handleInputChange('last_name', value)}
+                mode="outlined"
+                style={[styles.input, styles.halfInput]}
+                disabled={loading}
+              />
+            </View>
 
-        <TextInput
-          label="رمز عبور"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-        />
+            <TextInput
+              label="رمز عبور"
+              value={formData.password}
+              onChangeText={(value) => handleInputChange('password', value)}
+              mode="outlined"
+              secureTextEntry
+              style={styles.input}
+              disabled={loading}
+            />
 
-        <TextInput
-          label="تکرار رمز عبور"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          style={styles.input}
-        />
+            <TextInput
+              label="تکرار رمز عبور"
+              value={formData.confirmPassword}
+              onChangeText={(value) => handleInputChange('confirmPassword', value)}
+              mode="outlined"
+              secureTextEntry
+              style={styles.input}
+              disabled={loading}
+            />
 
-        <Button
-          mode="contained"
-          onPress={handleRegister}
-          style={styles.registerButton}
-          contentStyle={styles.registerButtonContent}
-        >
-          ثبت‌نام
-        </Button>
+            <Button
+              mode="contained"
+              onPress={handleRegister}
+              style={styles.button}
+              disabled={loading}
+            >
+              {loading ? <ActivityIndicator color="white" /> : 'ثبت نام'}
+            </Button>
 
-        <Button
-          mode="text"
-          onPress={() => navigation.navigate('Login')}
-          style={styles.loginButton}
-        >
-          بازگشت به صفحه ورود
-        </Button>
-      </View>
-    </ScrollView>
+            <View style={styles.loginContainer}>
+              <Text>قبلا ثبت نام کرده‌اید؟ </Text>
+              <Button
+                mode="text"
+                onPress={() => navigation.navigate('Login')}
+                disabled={loading}
+              >
+                ورود
+              </Button>
+            </View>
+          </Card.Content>
+        </Card>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#f5f5f5',
   },
-  content: {
-    padding: theme.spacing.lg,
-    minHeight: '100%',
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 20,
   },
-  headerContainer: {
-    marginTop: theme.spacing.xl * 2,
-    marginBottom: theme.spacing.xl,
-    alignItems: 'center',
+  card: {
+    elevation: 4,
+    borderRadius: 12,
   },
   title: {
-    ...theme.typography.h1,
-    color: theme.colors.primary,
-    marginBottom: theme.spacing.sm,
-  },
-  subtitle: {
-    ...theme.typography.body,
-    color: theme.colors.onSurface,
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    textAlign: 'center',
+    marginBottom: 30,
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   input: {
-    marginBottom: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
+    marginBottom: 16,
   },
-  registerButton: {
-    marginTop: theme.spacing.lg,
-    backgroundColor: theme.colors.accent,
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  registerButtonContent: {
-    padding: theme.spacing.sm,
+  halfInput: {
+    width: '48%',
   },
-  loginButton: {
-    marginTop: theme.spacing.md,
+  button: {
+    marginTop: 16,
+    paddingVertical: 8,
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
 

@@ -1,0 +1,401 @@
+INFO 2025-06-10 12:14:24,496 autoreload 585901 129524317959616 Watching for file changes with StatReloader
+INFO 2025-06-10 12:15:43,083 autoreload 585901 129524317959616 /home/amin/workspace/wishlist_project/wishlist_project/settings.py changed, reloading.
+INFO 2025-06-10 12:15:43,358 autoreload 586937 133231152375232 Watching for file changes with StatReloader
+INFO 2025-06-10 12:19:03,824 autoreload 588896 127348282529216 Watching for file changes with StatReloader
+INFO 2025-06-10 12:41:32,515 autoreload 586937 133231152375232 /home/amin/workspace/wishlist_project/wishlist_project/settings.py changed, reloading.
+INFO 2025-06-10 12:41:32,790 autoreload 600583 124387044189632 Watching for file changes with StatReloader
+INFO 2025-06-10 12:41:45,106 autoreload 600583 124387044189632 /home/amin/workspace/wishlist_project/wishlist_project/settings.py changed, reloading.
+INFO 2025-06-10 12:41:45,314 autoreload 600745 124347940423104 Watching for file changes with StatReloader
+WARNING 2025-06-10 12:43:33,283 log 600745 124347844916928 Not Found: /
+WARNING 2025-06-10 12:43:33,284 basehttp 600745 124347844916928 "GET / HTTP/1.1" 404 3522
+WARNING 2025-06-10 12:55:41,177 log 600745 124347844916928 Not Found: /auth/send-otp/
+WARNING 2025-06-10 12:55:41,177 basehttp 600745 124347844916928 "POST /auth/send-otp/ HTTP/1.1" 404 3583
+WARNING 2025-06-10 12:56:01,184 log 600745 124347844916928 Not Found: /auth/send-otp/
+WARNING 2025-06-10 12:56:01,184 basehttp 600745 124347844916928 "POST /auth/send-otp/ HTTP/1.1" 404 3583
+INFO 2025-06-10 12:56:18,915 autoreload 600745 124347940423104 /home/amin/workspace/wishlist_project/wishlist_project/urls.py changed, reloading.
+INFO 2025-06-10 12:56:19,176 autoreload 608372 137726982792640 Watching for file changes with StatReloader
+INFO 2025-06-10 13:26:28,324 basehttp 623993 137409514698432 "GET /admin/core/contribution/ HTTP/1.1" 200 18638
+INFO 2025-06-10 13:26:28,377 basehttp 623993 137409514698432 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,379 basehttp 623993 137409506305728 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,380 basehttp 623993 137409425569472 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,380 basehttp 623993 137409417176768 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,381 basehttp 623993 137409400391360 "GET /static/admin/css/rtl.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,389 basehttp 623993 137409514698432 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,389 basehttp 623993 137409506305728 "GET /static/admin/css/responsive_rtl.css HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,399 basehttp 623993 137409408784064 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:26:28,605 basehttp 623993 137409514698432 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:28,613 basehttp 623993 137409514698432 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+ERROR 2025-06-10 13:26:40,010 log 623993 137409514698432 Internal Server Error: /admin/core/wishlist/
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/db/models/options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'completion_percentage'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/db/models/options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: Wishlist has no field named 'completion_percentage'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/base.py", line 45, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 299, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/core/admin.py", line 137, in completion_percentage
+    return format_html(
+           ^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/utils/html.py", line 145, in format_html
+    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Unknown format code 'f' for object of type 'SafeString'
+ERROR 2025-06-10 13:26:40,012 basehttp 623993 137409514698432 "GET /admin/core/wishlist/ HTTP/1.1" 500 431091
+INFO 2025-06-10 13:26:43,960 basehttp 623993 137409514698432 "GET /admin/core/contribution/ HTTP/1.1" 200 18638
+INFO 2025-06-10 13:26:49,492 basehttp 623993 137409514698432 "GET /admin/core/wishlist/add/ HTTP/1.1" 200 35110
+INFO 2025-06-10 13:26:49,526 basehttp 623993 137409417176768 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-06-10 13:26:49,526 basehttp 623993 137409506305728 "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-06-10 13:26:49,526 basehttp 623993 137409400391360 "GET /static/admin/js/inlines.js HTTP/1.1" 200 15628
+INFO 2025-06-10 13:26:49,526 basehttp 623993 137409408784064 "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-06-10 13:26:49,535 basehttp 623993 137409514698432 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:26:49,536 basehttp 623993 137409417176768 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-06-10 13:26:49,578 basehttp 623993 137409417176768 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-06-10 13:26:49,584 basehttp 623993 137409514698432 "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+INFO 2025-06-10 13:26:49,584 basehttp 623993 137409408784064 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-06-10 13:26:49,665 basehttp 623993 137409514698432 "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+INFO 2025-06-10 13:26:49,668 basehttp 623993 137409417176768 "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-06-10 13:27:47,451 basehttp 623993 137409514698432 "GET /static/admin/img/calendar-icons.svg HTTP/1.1" 200 2455
+INFO 2025-06-10 13:28:11,696 basehttp 623993 137409514698432 "POST /admin/core/wishlist/add/ HTTP/1.1" 200 35475
+INFO 2025-06-10 13:28:11,738 basehttp 623993 137409514698432 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:28:21,398 basehttp 623993 137409514698432 "GET /admin/core/user/?_to_field=id&_popup=1 HTTP/1.1" 200 11036
+INFO 2025-06-10 13:28:30,239 basehttp 623993 137409514698432 "POST /admin/core/wishlist/add/ HTTP/1.1" 302 0
+ERROR 2025-06-10 13:28:30,302 log 623993 137409514698432 Internal Server Error: /admin/core/wishlist/
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/db/models/options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'completion_percentage'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/db/models/options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: Wishlist has no field named 'completion_percentage'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/base.py", line 45, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/template/library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/templatetags/admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/contrib/admin/utils.py", line 299, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/core/admin.py", line 137, in completion_percentage
+    return format_html(
+           ^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/utils/html.py", line 145, in format_html
+    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Unknown format code 'f' for object of type 'SafeString'
+ERROR 2025-06-10 13:28:30,303 basehttp 623993 137409514698432 "GET /admin/core/wishlist/ HTTP/1.1" 500 431380
+INFO 2025-06-10 13:30:59,342 basehttp 626699 133652346304192 "GET /admin/core/wishlist/ HTTP/1.1" 200 24896
+INFO 2025-06-10 13:30:59,385 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:11,431 basehttp 626699 133652346304192 "GET /admin/core/contribution/ HTTP/1.1" 200 18638
+INFO 2025-06-10 13:31:11,466 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:13,749 basehttp 626699 133652346304192 "GET /admin/core/user/ HTTP/1.1" 200 23635
+INFO 2025-06-10 13:31:13,781 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:15,539 basehttp 626699 133652346304192 "GET /admin/core/captchachallenge/ HTTP/1.1" 200 19618
+INFO 2025-06-10 13:31:15,569 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:17,202 basehttp 626699 133652346304192 "GET /admin/core/occasion/ HTTP/1.1" 200 25408
+INFO 2025-06-10 13:31:17,235 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:20,308 basehttp 626699 133652346304192 "GET /admin/core/wishlist/ HTTP/1.1" 200 24896
+INFO 2025-06-10 13:31:20,337 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:25,117 basehttp 626699 133652346304192 "GET /admin/core/phoneverificationlog/ HTTP/1.1" 200 18302
+INFO 2025-06-10 13:31:25,145 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:27,573 basehttp 626699 133652346304192 "GET /admin/core/subscriptionplan/ HTTP/1.1" 200 24117
+INFO 2025-06-10 13:31:27,599 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:36,341 basehttp 626699 133652346304192 "GET /admin/core/devicefingerprint/ HTTP/1.1" 200 19236
+INFO 2025-06-10 13:31:36,375 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:38,265 basehttp 626699 133652346304192 "GET /admin/core/userfollow/ HTTP/1.1" 200 17879
+INFO 2025-06-10 13:31:38,296 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:40,603 basehttp 626699 133652346304192 "GET /admin/core/category/ HTTP/1.1" 200 25879
+INFO 2025-06-10 13:31:40,632 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:51,878 basehttp 626699 133652346304192 "GET /admin/core/wallettransaction/ HTTP/1.1" 200 19298
+INFO 2025-06-10 13:31:51,917 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:54,586 basehttp 626699 133652346304192 "GET /admin/core/behavioranalysis/ HTTP/1.1" 200 19265
+INFO 2025-06-10 13:31:54,627 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:56,205 basehttp 626699 133652346304192 "GET /admin/core/otpverification/ HTTP/1.1" 200 18593
+INFO 2025-06-10 13:31:56,242 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:31:58,134 basehttp 626699 133652346304192 "GET /admin/core/tag/ HTTP/1.1" 200 23567
+INFO 2025-06-10 13:31:58,175 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:32:01,537 basehttp 626699 133652346304192 "GET /admin/core/ipreputationlog/ HTTP/1.1" 200 19828
+INFO 2025-06-10 13:32:01,577 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:32:03,989 basehttp 626699 133652346304192 "GET /admin/core/notification/ HTTP/1.1" 200 24181
+INFO 2025-06-10 13:32:04,040 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:32:13,092 basehttp 626699 133652346304192 "GET /admin/core/usersubscription/ HTTP/1.1" 200 19036
+INFO 2025-06-10 13:32:13,122 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:32:14,631 basehttp 626699 133652346304192 "GET /admin/core/wishlistitem/ HTTP/1.1" 200 24797
+INFO 2025-06-10 13:32:14,670 basehttp 626699 133652346304192 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+WARNING 2025-06-10 13:45:12,726 log 626699 133652325324480 Not Found: /auth/send-email-verification/
+WARNING 2025-06-10 13:45:12,726 basehttp 626699 133652325324480 "POST /auth/send-email-verification/ HTTP/1.1" 404 32409
+ERROR 2025-06-10 13:48:50,904 log 636804 126767247390400 Internal Server Error: /auth/send-email-verification/
+Traceback (most recent call last):
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/amin/workspace/wishlist_project/core/views.py", line 775, in send_email_verification
+    bot_check = AntiBotService.check_request_security(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'AntiBotService' has no attribute 'check_request_security'
+ERROR 2025-06-10 13:48:50,905 basehttp 636804 126767247390400 "POST /auth/send-email-verification/ HTTP/1.1" 500 122625
+WARNING 2025-06-10 13:49:02,051 log 636804 126767247390400 Not Found: /auth/
+WARNING 2025-06-10 13:49:02,051 basehttp 636804 126767247390400 "GET /auth/ HTTP/1.1" 404 34306
+INFO 2025-06-10 13:49:13,967 basehttp 636804 126767247390400 "GET /auth/google/url/ HTTP/1.1" 200 439
+INFO 2025-06-10 13:52:20,065 basehttp 636804 126767247390400 "GET /admin/core/wishlistitem/ HTTP/1.1" 200 25566
+INFO 2025-06-10 13:52:20,109 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:24,169 basehttp 636804 126767247390400 "GET /admin/core/wishlistitem/ HTTP/1.1" 200 25566
+INFO 2025-06-10 13:52:24,195 basehttp 636804 126767247390400 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-06-10 13:52:24,196 basehttp 636804 126767159305920 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-06-10 13:52:24,197 basehttp 636804 126767133079232 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-06-10 13:52:24,197 basehttp 636804 126767167698624 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-06-10 13:52:24,197 basehttp 636804 126767141471936 "GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+INFO 2025-06-10 13:52:24,199 basehttp 636804 126767159305920 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-06-10 13:52:24,201 basehttp 636804 126767141471936 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-06-10 13:52:24,201 basehttp 636804 126767150913216 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-06-10 13:52:24,202 basehttp 636804 126767133079232 "GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+INFO 2025-06-10 13:52:24,202 basehttp 636804 126767150913216 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-06-10 13:52:24,210 basehttp 636804 126767167698624 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:24,237 basehttp 636804 126767247390400 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-06-10 13:52:24,241 basehttp 636804 126767159305920 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-06-10 13:52:24,245 basehttp 636804 126767141471936 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-06-10 13:52:24,246 basehttp 636804 126767133079232 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-06-10 13:52:24,246 basehttp 636804 126767150913216 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-06-10 13:52:24,254 basehttp 636804 126767167698624 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-06-10 13:52:24,256 basehttp 636804 126767167698624 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-06-10 13:52:24,290 basehttp 636804 126767150913216 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-06-10 13:52:24,293 basehttp 636804 126767141471936 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-06-10 13:52:24,298 basehttp 636804 126767133079232 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-06-10 13:52:24,298 basehttp 636804 126767159305920 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-06-10 13:52:24,300 basehttp 636804 126767247390400 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-06-10 13:52:24,301 basehttp 636804 126767167698624 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-06-10 13:52:24,410 log 636804 126767247390400 Not Found: /favicon.ico
+WARNING 2025-06-10 13:52:24,410 basehttp 636804 126767247390400 "GET /favicon.ico HTTP/1.1" 404 34324
+INFO 2025-06-10 13:52:33,116 basehttp 636804 126767247390400 "GET /admin/core/usersubscription/ HTTP/1.1" 200 19805
+INFO 2025-06-10 13:52:33,148 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:34,514 basehttp 636804 126767247390400 "GET /admin/core/notification/ HTTP/1.1" 200 24950
+INFO 2025-06-10 13:52:34,548 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:40,978 basehttp 636804 126767247390400 "GET /admin/core/user/ HTTP/1.1" 200 24404
+INFO 2025-06-10 13:52:41,006 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:55,628 basehttp 636804 126767247390400 "GET /admin/core/wishlist/ HTTP/1.1" 200 25665
+INFO 2025-06-10 13:52:55,663 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:58,310 basehttp 636804 126767247390400 "GET /admin/core/userfollow/ HTTP/1.1" 200 18648
+INFO 2025-06-10 13:52:58,345 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738
+INFO 2025-06-10 13:52:59,555 basehttp 636804 126767247390400 "GET /admin/core/wallettransaction/ HTTP/1.1" 200 20067
+INFO 2025-06-10 13:52:59,585 basehttp 636804 126767247390400 "GET /admin/jsi18n/ HTTP/1.1" 200 12738

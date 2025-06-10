@@ -1,20 +1,77 @@
-Django>=4.2.0,<5.0.0
-djangorestframework>=3.14.0
-djangorestframework-simplejwt>=5.2.2
-django-cors-headers>=4.0.0
-Pillow>=9.5.0
-python-dotenv>=1.0.0
-psycopg2-binary>=2.9.6
-django-filter>=23.2
-celery>=5.3.0
-redis>=4.5.5
-channels>=4.0.0
-drf-yasg>=1.21.5  # For API documentation
+# Core Django
+Django==5.2.2
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.0
 
-# Test dependencies
-pytest>=7.3.1
-pytest-django>=4.5.2
-pytest-cov>=4.1.0  # For coverage reporting
-factory-boy>=3.3.0  # For test data factories
-faker>=18.13.0  # For generating fake data
-freezegun>=1.2.2  # For time-dependent tests
+# Database
+psycopg2-binary==2.9.7
+
+# API Documentation
+drf-yasg==1.21.7
+
+# CORS & Environment
+django-cors-headers==4.3.1
+django-environ==0.11.2
+
+# Media & Storage
+Pillow==10.0.0
+django-storages==1.14.2
+boto3==1.34.0
+
+# Background Tasks
+celery==5.3.1
+redis==4.6.0
+
+# Money & Filtering
+django-money==3.4.1
+
+# Filtering
+django-filter==24.2
+
+# Push Notifications
+django-push-notifications==3.1.0
+
+# Testing
+pytest==7.4.3
+pytest-django==4.7.0
+factory-boy==3.3.0
+faker==20.1.0
+
+# Production
+gunicorn==21.2.0
+whitenoise==6.5.0
+
+# Utilities
+python-decouple==3.8
+django-extensions==3.2.3
+shortuuid==1.0.11
+
+# Security & Rate Limiting
+django-ratelimit==4.1.0
+cryptography==41.0.4
+requests==2.31.0
+coverage==7.3.0
+django-debug-toolbar==4.2.0
+
+# Anti-Bot Security
+django-redis==5.2.0
+user-agents==2.2.0
+python-geoip2==4.7.0
+maxminddb==2.2.0
+
+# Rate Limiting & Security
+django-axes==6.1.1
+
+# Captcha (اختیاری)
+django-recaptcha==3.0.0
+
+# IP Analysis (اختیاری)
+ipaddress==1.0.23
+
+# Google OAuth
+django-allauth==0.63.3
+requests-oauthlib==1.3.1
+
+# Additional OAuth support
+PyJWT==2.8.0
+cryptography==41.0.8

@@ -1,111 +1,198 @@
 import React from 'react';
+
+export type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  Main: undefined;
+  WishlistDetail: { id: number };
+  WishlistItemDetail: { id: number };
+  AddWishlistItem: { wishlistId: number };
+  EditWishlistItem: { id: number };
+  Payment: { itemId: number; amount: number };
+  ShareWishlist: { wishlistId: number };
+  Invitation: { token: string };
+};
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useTheme } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
 import { theme } from '../utils/theme';
 
-// Import screens (will create these next)
-import { HomeScreen } from '../screens/HomeScreen';
-import { WishlistItemDetailScreen } from '../screens/WishlistItemDetailScreen';
-import { AddWishlistItemScreen } from '../screens/AddWishlistItemScreen';
+// Auth Screens
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+
+// Main Screens
+import { HomeScreen } from '../screens/HomeScreen';
+import { AddWishlistItemScreen } from '../screens/AddWishlistItemScreen';
+import { WishlistItemDetailScreen } from '../screens/WishlistItemDetailScreen';
+import { CreateWishlistScreen } from '../screens/CreateWishlistScreen';
+
+// Profile Screens
 import ProfileScreen from '../screens/profile/ProfileScreen';
-import NotificationsScreen from '../screens/notifications/NotificationsScreen';
+// import WalletScreen from '../screens/profile/WalletScreen';
+// import SettingsScreen from '../screens/profile/SettingsScreen';
+
+// Notification Screen
+// import NotificationScreen from '../screens/notifications/NotificationScreen';
+
+// Payment Screen
+import PaymentScreen from '../screens/PaymentScreen';
+
+// Share Screen
+import ShareWishlistScreen from '../screens/ShareWishlistScreen';
+import InvitationScreen from '../screens/InvitationScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TabNavigator = () => {
-  const theme = useTheme();
-
+const AuthNavigator = () => {
   return (
-    <Tab.Navigator
+    <Stack.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.secondary,
+        headerShown: false,
       }}
     >
-      <Tab.Screen
-        name="Home"
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const MainTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: true,
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+        },
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.disabled,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'AddItem') {
+            iconName = focused ? 'add-circle' : 'add-circle-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Notifications') {
+            iconName = focused ? 'notifications' : 'notifications-outline';
+          } else {
+            iconName = 'help-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen 
+        name="Home" 
         component={HomeScreen}
         options={{
-          title: 'آرزوها',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="gift" color={color} size={size} />
-          ),
+          title: 'آرزوهای من',
+          tabBarLabel: 'خانه',
         }}
       />
-      <Tab.Screen
-        name="Notifications"
-        component={NotificationsScreen}
+      <Tab.Screen 
+        name="AddItem" 
+        component={AddWishlistItemScreen}
+        options={{
+          title: 'افزودن آیتم',
+          tabBarLabel: 'افزودن',
+        }}
+      />
+      {/* <Tab.Screen 
+        name="Notifications" 
+        component={NotificationScreen}
         options={{
           title: 'اعلان‌ها',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="bell" color={color} size={size} />
-          ),
+          tabBarLabel: 'اعلان‌ها',
         }}
-      />
-      <Tab.Screen
-        name="Profile"
+      /> */}
+      <Tab.Screen 
+        name="Profile" 
         component={ProfileScreen}
         options={{
           title: 'پروفایل',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="account" color={color} size={size} />
-          ),
+          tabBarLabel: 'پروفایل',
         }}
       />
     </Tab.Navigator>
   );
 };
 
+const MainNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        headerTintColor: theme.colors.white,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen 
+        name="MainTabs" 
+        component={MainTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="ItemDetail" 
+        component={WishlistItemDetailScreen}
+        options={{ title: 'جزئیات آیتم' }}
+      />
+      <Stack.Screen 
+        name="CreateWishlist" 
+        component={CreateWishlistScreen}
+        options={{ title: 'ایجاد لیست آرزو' }}
+      />
+      {/* <Stack.Screen 
+        name="Wallet" 
+        component={WalletScreen}
+        options={{ title: 'کیف پول' }}
+      />
+      <Stack.Screen 
+        name="Settings" 
+        component={SettingsScreen}
+        options={{ title: 'تنظیمات' }}
+      /> */}
+      <Stack.Screen 
+        name="Payment" 
+        component={PaymentScreen}
+        options={{ title: 'پرداخت' }}
+      />
+      <Stack.Screen 
+        name="ShareWishlist" 
+        component={ShareWishlistScreen}
+        options={{ title: 'اشتراک‌گذاری' }}
+      />
+      <Stack.Screen 
+        name="Invitation" 
+        component={InvitationScreen}
+        options={{ title: 'دعوت‌نامه' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const AppNavigator = () => {
+  const { user, token } = useAuth();
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: theme.colors.primary,
-          },
-          headerTintColor: theme.colors.white,
-          headerTitleStyle: {
-            fontFamily: 'IRANSans', // We'll need to add this font
-          },
-        }}
-      >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="MainApp" component={TabNavigator} />
-        <Stack.Screen
-          name="WishlistItemDetail"
-          component={WishlistItemDetailScreen}
-          options={{
-            headerShown: true,
-            headerTitle: 'جزئیات آرزو',
-            headerStyle: {
-              backgroundColor: theme.colors.primary,
-            },
-            headerTintColor: theme.colors.surface,
-          }}
-        />
-        <Stack.Screen
-          name="AddWishlistItem"
-          component={AddWishlistItemScreen}
-          options={{
-            headerShown: true,
-            headerTitle: 'افزودن آرزوی جدید',
-            headerStyle: {
-              backgroundColor: theme.colors.primary,
-            },
-            headerTintColor: theme.colors.surface,
-          }}
-        />
-      </Stack.Navigator>
+      {user && token ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };
