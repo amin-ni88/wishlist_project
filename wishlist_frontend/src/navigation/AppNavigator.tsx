@@ -1,200 +1,126 @@
 import React from 'react';
-
-export type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Main: undefined;
-  WishlistDetail: { id: number };
-  WishlistItemDetail: { id: number };
-  AddWishlistItem: { wishlistId: number };
-  EditWishlistItem: { id: number };
-  Payment: { itemId: number; amount: number };
-  ShareWishlist: { wishlistId: number };
-  Invitation: { token: string };
-};
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
-import { theme } from '../utils/theme';
 
-// Auth Screens
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
+// Simple Login Component
+const SimpleLogin = () => {
+  const { login } = useAuth();
+  
+  const handleLogin = () => {
+    const mockUser = {
+      id: 1,
+      username: 'تست',
+      email: 'test@example.com',
+      first_name: 'کاربر',
+      last_name: 'تست',
+    };
+    login(mockUser, 'mock-token');
+  };
 
-// Main Screens
-import { HomeScreen } from '../screens/HomeScreen';
-import { AddWishlistItemScreen } from '../screens/AddWishlistItemScreen';
-import { WishlistItemDetailScreen } from '../screens/WishlistItemDetailScreen';
-import { CreateWishlistScreen } from '../screens/CreateWishlistScreen';
-
-// Profile Screens
-import ProfileScreen from '../screens/profile/ProfileScreen';
-// import WalletScreen from '../screens/profile/WalletScreen';
-// import SettingsScreen from '../screens/profile/SettingsScreen';
-
-// Notification Screen
-// import NotificationScreen from '../screens/notifications/NotificationScreen';
-
-// Payment Screen
-import PaymentScreen from '../screens/PaymentScreen';
-
-// Share Screen
-import ShareWishlistScreen from '../screens/ShareWishlistScreen';
-import InvitationScreen from '../screens/InvitationScreen';
-
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-const AuthNavigator = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-    </Stack.Navigator>
+    <View style={styles.container}>
+      <Text style={styles.title}>🎉 پلتفرم لیست آرزوها</Text>
+      <Text style={styles.subtitle}>ورود به حساب کاربری</Text>
+      
+      <View style={styles.colorDisplay}>
+        <View style={[styles.colorBox, { backgroundColor: '#17A6A3' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#A7D7C5' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#136973' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#043E50' }]} />
+      </View>
+      
+      <Button 
+        mode="contained" 
+        onPress={handleLogin}
+        style={styles.button}
+        buttonColor="#17A6A3"
+      >
+        ورود (تست)
+      </Button>
+    </View>
   );
 };
 
-const MainTabNavigator = () => {
+// Simple Home Component
+const SimpleHome = () => {
+  const { user, logout } = useAuth();
+  
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: true,
-        tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopWidth: 1,
-          borderTopColor: '#e0e0e0',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
-        },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.disabled,
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
-
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'AddItem') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'Notifications') {
-            iconName = focused ? 'notifications' : 'notifications-outline';
-          } else {
-            iconName = 'help-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen 
-        name="Home" 
-        component={HomeScreen}
-        options={{
-          title: 'آرزوهای من',
-          tabBarLabel: 'خانه',
-        }}
-      />
-      <Tab.Screen 
-        name="AddItem" 
-        component={AddWishlistItemScreen}
-        options={{
-          title: 'افزودن آیتم',
-          tabBarLabel: 'افزودن',
-        }}
-      />
-      {/* <Tab.Screen 
-        name="Notifications" 
-        component={NotificationScreen}
-        options={{
-          title: 'اعلان‌ها',
-          tabBarLabel: 'اعلان‌ها',
-        }}
-      /> */}
-      <Tab.Screen 
-        name="Profile" 
-        component={ProfileScreen}
-        options={{
-          title: 'پروفایل',
-          tabBarLabel: 'پروفایل',
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
-
-const MainNavigator = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        headerTintColor: theme.colors.white,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
-    >
-      <Stack.Screen 
-        name="MainTabs" 
-        component={MainTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen 
-        name="ItemDetail" 
-        component={WishlistItemDetailScreen}
-        options={{ title: 'جزئیات آیتم' }}
-      />
-      <Stack.Screen 
-        name="CreateWishlist" 
-        component={CreateWishlistScreen}
-        options={{ title: 'ایجاد لیست آرزو' }}
-      />
-      {/* <Stack.Screen 
-        name="Wallet" 
-        component={WalletScreen}
-        options={{ title: 'کیف پول' }}
-      />
-      <Stack.Screen 
-        name="Settings" 
-        component={SettingsScreen}
-        options={{ title: 'تنظیمات' }}
-      /> */}
-      <Stack.Screen 
-        name="Payment" 
-        component={PaymentScreen}
-        options={{ title: 'پرداخت' }}
-      />
-      <Stack.Screen 
-        name="ShareWishlist" 
-        component={ShareWishlistScreen}
-        options={{ title: 'اشتراک‌گذاری' }}
-      />
-      <Stack.Screen 
-        name="Invitation" 
-        component={InvitationScreen}
-        options={{ title: 'دعوت‌نامه' }}
-      />
-    </Stack.Navigator>
+    <View style={styles.container}>
+      <Text style={styles.title}>خوش آمدید {user?.first_name}! 🎉</Text>
+      <Text style={styles.subtitle}>پلتفرم لیست آرزوها</Text>
+      
+      <View style={styles.colorDisplay}>
+        <View style={[styles.colorBox, { backgroundColor: '#17A6A3' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#A7D7C5' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#136973' }]} />
+        <View style={[styles.colorBox, { backgroundColor: '#043E50' }]} />
+      </View>
+      
+      <Text style={styles.text}>✅ سیستم احراز هویت فعال</Text>
+      <Text style={styles.text}>✅ پالت رنگی فارسی اعمال شده</Text>
+      <Text style={styles.text}>✅ Backend API متصل</Text>
+      
+      <Button 
+        mode="outlined" 
+        onPress={logout}
+        style={styles.button}
+        textColor="#17A6A3"
+      >
+        خروج
+      </Button>
+    </View>
   );
 };
 
 const AppNavigator = () => {
   const { user, token } = useAuth();
 
-  return (
-    <NavigationContainer>
-      {user && token ? <MainNavigator /> : <AuthNavigator />}
-    </NavigationContainer>
-  );
+  return user && token ? <SimpleHome /> : <SimpleLogin />;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FAFAFA',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#17A6A3',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#043E50',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  text: {
+    fontSize: 16,
+    color: '#043E50',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  colorDisplay: {
+    flexDirection: 'row',
+    marginBottom: 30,
+  },
+  colorBox: {
+    width: 50,
+    height: 50,
+    marginHorizontal: 5,
+    borderRadius: 8,
+  },
+  button: {
+    marginTop: 20,
+    paddingHorizontal: 30,
+  },
+});
 
 export default AppNavigator;

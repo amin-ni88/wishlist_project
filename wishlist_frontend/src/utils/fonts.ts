@@ -1,36 +1,30 @@
-// Persian Fonts Configuration for Wishlist App
-// Using Vazir and Dana fonts for better Persian text rendering
-
+// Simplified Fonts Configuration for Web Compatibility
 export const fontFamily = {
-  // فونت‌های اصلی
-  primary: 'Vazir',           // فونت اصلی - وزیر
-  secondary: 'Dana',          // فونت ثانویه - دانا
-  english: 'System',          // فونت انگلیسی
+  primary: 'system-ui, -apple-system, sans-serif',
+  secondary: 'system-ui, -apple-system, sans-serif', 
+  english: 'system-ui, -apple-system, sans-serif',
   
-  // وزن‌های مختلف وزیر
   vazir: {
-    thin: 'Vazir-Thin',
-    light: 'Vazir-Light',
-    regular: 'Vazir',
-    medium: 'Vazir-Medium',
-    bold: 'Vazir-Bold',
-    black: 'Vazir-Black',
+    thin: 'system-ui, -apple-system, sans-serif',
+    light: 'system-ui, -apple-system, sans-serif',
+    regular: 'system-ui, -apple-system, sans-serif',
+    medium: 'system-ui, -apple-system, sans-serif',
+    bold: 'system-ui, -apple-system, sans-serif',
+    black: 'system-ui, -apple-system, sans-serif',
   },
   
-  // وزن‌های مختلف دانا
   dana: {
-    thin: 'Dana-Thin',
-    light: 'Dana-Light',
-    regular: 'Dana',
-    medium: 'Dana-Medium',
-    demiBold: 'Dana-DemiBold',
-    bold: 'Dana-Bold',
-    extraBold: 'Dana-ExtraBold',
-    black: 'Dana-Black',
+    thin: 'system-ui, -apple-system, sans-serif',
+    light: 'system-ui, -apple-system, sans-serif',
+    regular: 'system-ui, -apple-system, sans-serif',
+    medium: 'system-ui, -apple-system, sans-serif',
+    demiBold: 'system-ui, -apple-system, sans-serif',
+    bold: 'system-ui, -apple-system, sans-serif',
+    extraBold: 'system-ui, -apple-system, sans-serif',
+    black: 'system-ui, -apple-system, sans-serif',
   },
 };
 
-// سایز فونت‌ها بر اساس responsive design
 export const fontSize = {
   xs: 10,
   sm: 12,
@@ -45,7 +39,6 @@ export const fontSize = {
   '6xl': 48,
 };
 
-// ارتفاع خط برای متن‌های فارسی
 export const lineHeight = {
   tight: 1.2,
   normal: 1.4,
@@ -53,7 +46,6 @@ export const lineHeight = {
   loose: 1.8,
 };
 
-// فاصله بین حروف
 export const letterSpacing = {
   tighter: -0.5,
   tight: -0.25,
@@ -63,153 +55,81 @@ export const letterSpacing = {
   widest: 1,
 };
 
-// تنظیمات فونت برای React Native
 export const fontConfig = {
   default: {
     regular: {
       fontFamily: fontFamily.primary,
-      fontWeight: 'normal',
-    },
-    medium: {
-      fontFamily: fontFamily.vazir.medium,
-      fontWeight: 'normal',
-    },
-    light: {
-      fontFamily: fontFamily.vazir.light,
-      fontWeight: 'normal',
-    },
-    thin: {
-      fontFamily: fontFamily.vazir.thin,
-      fontWeight: 'normal',
-    },
-  },
-  ios: {
-    regular: {
-      fontFamily: fontFamily.primary,
       fontWeight: '400',
     },
     medium: {
-      fontFamily: fontFamily.vazir.medium,
+      fontFamily: fontFamily.primary,
       fontWeight: '500',
     },
     light: {
-      fontFamily: fontFamily.vazir.light,
+      fontFamily: fontFamily.primary,
       fontWeight: '300',
     },
     thin: {
-      fontFamily: fontFamily.vazir.thin,
-      fontWeight: '100',
-    },
-  },
-  android: {
-    regular: {
       fontFamily: fontFamily.primary,
-      fontWeight: 'normal',
-    },
-    medium: {
-      fontFamily: fontFamily.vazir.medium,
-      fontWeight: 'normal',
-    },
-    light: {
-      fontFamily: fontFamily.vazir.light,
-      fontWeight: 'normal',
-    },
-    thin: {
-      fontFamily: fontFamily.vazir.thin,
-      fontWeight: 'normal',
-    },
-  },
-  web: {
-    regular: {
-      fontFamily: fontFamily.primary,
-      fontWeight: '400',
-    },
-    medium: {
-      fontFamily: fontFamily.vazir.medium,
-      fontWeight: '500',
-    },
-    light: {
-      fontFamily: fontFamily.vazir.light,
-      fontWeight: '300',
-    },
-    thin: {
-      fontFamily: fontFamily.vazir.thin,
       fontWeight: '100',
     },
   },
 };
 
-// استایل‌های متن از پیش تعریف شده
 export const textStyles = {
-  // تیترها
   h1: {
-    fontFamily: fontFamily.dana.bold,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize['4xl'],
+    fontWeight: '700',
     lineHeight: lineHeight.tight,
-    letterSpacing: letterSpacing.tight,
   },
   h2: {
-    fontFamily: fontFamily.dana.bold,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize['3xl'],
+    fontWeight: '700',
     lineHeight: lineHeight.tight,
-    letterSpacing: letterSpacing.tight,
   },
   h3: {
-    fontFamily: fontFamily.dana.demiBold,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize['2xl'],
+    fontWeight: '600',
     lineHeight: lineHeight.normal,
-    letterSpacing: letterSpacing.normal,
   },
   h4: {
-    fontFamily: fontFamily.dana.medium,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.xl,
+    fontWeight: '500',
     lineHeight: lineHeight.normal,
-    letterSpacing: letterSpacing.normal,
   },
-  
-  // متن‌های معمولی
   body1: {
-    fontFamily: fontFamily.vazir.regular,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.md,
+    fontWeight: '400',
     lineHeight: lineHeight.relaxed,
-    letterSpacing: letterSpacing.normal,
   },
   body2: {
-    fontFamily: fontFamily.vazir.regular,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.base,
+    fontWeight: '400',
     lineHeight: lineHeight.relaxed,
-    letterSpacing: letterSpacing.normal,
   },
-  
-  // متن‌های کوچک
   caption: {
-    fontFamily: fontFamily.vazir.light,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.sm,
+    fontWeight: '300',
     lineHeight: lineHeight.normal,
-    letterSpacing: letterSpacing.wide,
   },
-  overline: {
-    fontFamily: fontFamily.dana.medium,
-    fontSize: fontSize.xs,
-    lineHeight: lineHeight.normal,
-    letterSpacing: letterSpacing.widest,
-    textTransform: 'uppercase',
-  },
-  
-  // دکمه‌ها
   button: {
-    fontFamily: fontFamily.dana.demiBold,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.base,
+    fontWeight: '600',
     lineHeight: lineHeight.tight,
-    letterSpacing: letterSpacing.wide,
   },
-  
-  // لیبل‌ها
   label: {
-    fontFamily: fontFamily.vazir.medium,
+    fontFamily: fontFamily.primary,
     fontSize: fontSize.base,
+    fontWeight: '500',
     lineHeight: lineHeight.normal,
-    letterSpacing: letterSpacing.normal,
   },
 };
 

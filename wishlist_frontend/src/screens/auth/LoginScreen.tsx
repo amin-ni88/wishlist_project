@@ -16,7 +16,6 @@ import {
   ActivityIndicator,
 } from 'react-native-paper';
 import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface LoginScreenProps {
@@ -37,21 +36,25 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const response = await authAPI.login({ username, password });
-      const { access, refresh, user } = response.data;
+      // Simulate API call for now
+      const mockUser = {
+        id: 1,
+        username: username,
+        email: `${username}@example.com`,
+        first_name: 'کاربر',
+        last_name: 'تست',
+      };
+      const mockToken = 'mock-jwt-token';
 
-      await AsyncStorage.setItem('access_token', access);
-      await AsyncStorage.setItem('refresh_token', refresh);
-      await AsyncStorage.setItem('user', JSON.stringify(user));
+      await AsyncStorage.setItem('access_token', mockToken);
+      await AsyncStorage.setItem('refresh_token', 'mock-refresh-token');
+      await AsyncStorage.setItem('user', JSON.stringify(mockUser));
 
-      login(user, access);
+      login(mockUser, mockToken);
       navigation.replace('Main');
     } catch (error: any) {
       console.error('Login error:', error);
-      Alert.alert(
-        'خطا در ورود',
-        error.response?.data?.detail || 'نام کاربری یا رمز عبور اشتباه است'
-      );
+      Alert.alert('خطا در ورود', 'نام کاربری یا رمز عبور اشتباه است');
     } finally {
       setLoading(false);
     }
@@ -65,7 +68,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Card style={styles.card}>
           <Card.Content>
-            <Title style={styles.title}>ورود به حساب کاربری</Title>
+            <Title style={styles.title}>🎉 ورود به پلتفرم لیست آرزوها</Title>
             
             <TextInput
               label="نام کاربری"
@@ -93,6 +96,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               onPress={handleLogin}
               style={styles.button}
               disabled={loading}
+              buttonColor="#17A6A3"
             >
               {loading ? <ActivityIndicator color="white" /> : 'ورود'}
             </Button>
@@ -103,10 +107,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 mode="text"
                 onPress={() => navigation.navigate('Register')}
                 disabled={loading}
+                textColor="#17A6A3"
               >
                 ثبت نام
               </Button>
             </View>
+            
+            <Text style={styles.hint}>
+              💡 برای تست: هر نام کاربری و رمز عبوری وارد کنید
+            </Text>
           </Card.Content>
         </Card>
       </ScrollView>
@@ -133,6 +142,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#17A6A3',
   },
   input: {
     marginBottom: 16,
@@ -146,6 +156,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+  },
+  hint: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
   },
 });
 

@@ -510,6 +510,123 @@ class AntiBotService:
         cache.set(cache_key, attempts + 1, window_minutes * 60)
         return True, f'{max_attempts - attempts - 1} تلاش باقی مانده'
 
+    @classmethod
+    def check_request_security(cls, ip_address, user_agent='', session_id='', action='GENERAL'):
+        """بررسی امنیت درخواست - نقطه ورود اصلی برای تمام بررسی‌های امنیتی"""
+        result = {
+            'is_blocked': False,
+            'block_reasons': [],
+            'require_captcha': False,
+            'risk_score': 0
+        }
+
+        try:
+            # 1. بررسی اعتبار IP
+            from .models import IPReputationLog
+            try:
+                ip_log = IPReputationLog.objects.get(ip_address=ip_address)
+                if ip_log.is_currently_blocked():
+                    result['is_blocked'] = True
+                    result['block_reasons'].append(
+                        f'IP مسدود تا {ip_log.blocked_until}')
+                    return result
+
+                if ip_log.risk_score > 60:
+                    result['risk_score'] += ip_log.risk_score
+                    result['block_reasons'].append('IP مشکوک')
+                    if ip_log.risk_score > 80:
+                        result['is_blocked'] = True
+                        return result
+                    elif ip_log.risk_score > 70:
+                        result['require_captcha'] = True
+
+            except IPReputationLog.DoesNotExist:
+                # IP جدید - ریسک کم
+                pass
+
+            # 2. بررسی User Agent
+            if user_agent:
+                ua_lower = user_agent.lower()
+                bot_indicators = ['bot', 'crawler', 'spider',
+                                  'scraper', 'automated', 'headless']
+                if any(indicator in ua_lower for indicator in bot_indicators):
+                    result['risk_score'] += 35
+                    result['block_reasons'].append('User Agent مشکوک')
+                    result['require_captcha'] = True
+
+                # بررسی User Agent خالی یا خیلی کوتاه
+                if len(user_agent) < 20:
+                    result['risk_score'] += 25
+                    result['block_reasons'].append('User Agent نامعتبر')
+
+            # 3. بررسی محدودیت نرخ درخواست
+            from django.core.cache import cache
+            action_key = f"action_limit:{ip_address}:{action}"
+            action_attempts = cache.get(action_key, 0)
+
+            # تنظیم حد مجاز بر اساس نوع عمل
+            limits = {
+                'EMAIL_VERIFICATION': 5,
+                'REGISTER': 3,
+                'LOGIN': 10,
+                'GENERAL': 20
+            }
+            max_attempts = limits.get(action, 10)
+
+            if action_attempts >= max_attempts:
+                result['is_blocked'] = True
+                result['block_reasons'].append(
+                    f'حداکثر {max_attempts} تلاش در ساعت')
+                return result
+            elif action_attempts >= max_attempts * 0.7:  # 70% از حد مجاز
+                result['require_captcha'] = True
+                result['block_reasons'].append('تعداد تلاش زیاد')
+
+            # افزایش شمارنده
+            cache.set(action_key, action_attempts + 1, 3600)  # 1 ساعت
+
+            # 4. بررسی ردپای دستگاه (در صورت وجود session)
+            if session_id:
+                from .models import DeviceFingerprint
+                try:
+                    # شبیه‌سازی ردپای دستگاه بر اساس IP و User Agent
+                    import hashlib
+                    fingerprint_data = f"{user_agent}|{ip_address}"
+                    fingerprint_hash = hashlib.sha256(
+                        fingerprint_data.encode()).hexdigest()
+
+                    fingerprint = DeviceFingerprint.objects.filter(
+                        fingerprint_hash=fingerprint_hash
+                    ).first()
+
+                    if fingerprint and fingerprint.is_suspicious:
+                        result['risk_score'] += 30
+                        result['block_reasons'].append('دستگاه مشکوک')
+                        result['require_captcha'] = True
+
+                except Exception:
+                    # خطا در بررسی ردپای دستگاه - ادامه
+                    pass
+
+            # 5. تصمیم‌گیری نهایی
+            if result['risk_score'] > 80:
+                result['is_blocked'] = True
+            elif result['risk_score'] > 50:
+                result['require_captcha'] = True
+
+            return result
+
+        except Exception as e:
+            # در صورت خطا، اجازه ادامه را بده ولی لاگ کن
+            import logging
+            logging.error(f"خطا در بررسی امنیت درخواست: {str(e)}")
+            return {
+                'is_blocked': False,
+                'block_reasons': [],
+                'require_captcha': False,
+                'risk_score': 0
+            }
+
 
 class SecurityEventLogger:
     """ثبت رویدادهای امنیتی"""
@@ -569,6 +686,30 @@ class SecurityEventLogger:
             f'شکست در حل Captcha - تلاش {attempts}ام',
             'WARNING'
         )
+
+    @classmethod
+    def log_blocked_request(cls, ip_address, user_agent, action, reasons):
+        """ثبت درخواست مسدود شده"""
+        import logging
+        from django.utils import timezone
+
+        security_logger = logging.getLogger('security')
+
+        log_data = {
+            'event_type': 'REQUEST_BLOCKED',
+            'ip_address': ip_address,
+            'user_agent': user_agent,
+            'action': action,
+            'block_reasons': reasons,
+            'severity': 'CRITICAL',
+            'timestamp': timezone.now().isoformat(),
+        }
+
+        security_logger.critical(f"BLOCKED REQUEST: {log_data}")
+
+        # ثبت اضافی برای مانیتورینگ
+        description = f'درخواست {action} مسدود شد - دلایل: {", ".join(reasons)}'
+        security_logger.critical(f"SECURITY EVENT: {log_data} - {description}")
 
 
 class EmailValidationService:

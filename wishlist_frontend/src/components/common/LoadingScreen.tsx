@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ActivityIndicator, Text, Surface } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../../utils/theme';
 
 interface LoadingScreenProps {
   message?: string;
@@ -16,7 +14,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   if (!fullScreen) {
     return (
       <View style={styles.inlineContainer}>
-        <ActivityIndicator size="small" color={theme.colors.primary} />
+        <ActivityIndicator size="small" color="#17A6A3" />
         <Text style={styles.inlineText}>{message}</Text>
       </View>
     );
@@ -24,23 +22,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={[theme.colors.primary, theme.colors.accent]}
-        style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <Surface style={styles.loadingCard}>
-          <View style={styles.content}>
-            <ActivityIndicator 
-              size="large" 
-              color={theme.colors.primary}
-              style={styles.spinner}
-            />
-            <Text style={styles.message}>{message}</Text>
-          </View>
-        </Surface>
-      </LinearGradient>
+      <Surface style={styles.loadingCard}>
+        <View style={styles.content}>
+          <ActivityIndicator 
+            size="large" 
+            color="#17A6A3"
+            style={styles.spinner}
+          />
+          <Text style={styles.message}>{message}</Text>
+        </View>
+      </Surface>
     </View>
   );
 };
@@ -50,18 +41,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  gradient: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#FAFAFA',
   },
   loadingCard: {
     borderRadius: 16,
     elevation: 8,
     padding: 32,
-    backgroundColor: theme.colors.surface,
+    backgroundColor: '#FFFFFF',
   },
   content: {
     alignItems: 'center',
@@ -71,7 +57,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 16,
-    color: theme.colors.text,
+    color: '#043E50',
     textAlign: 'center',
   },
   inlineContainer: {
@@ -82,7 +68,7 @@ const styles = StyleSheet.create({
   },
   inlineText: {
     marginLeft: 12,
-    color: theme.colors.text,
+    color: '#043E50',
   },
 });
 

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { I18nManager, StyleSheet } from 'react-native';
 
 interface RightToLeftContextType {
   isRTL: boolean;
@@ -23,7 +22,7 @@ interface Props {
 
 export const RightToLeftProvider: React.FC<Props> = ({ children }) => {
   const rtlStyles = {
-    isRTL: I18nManager.isRTL,
+    isRTL: true,
     textAlign: 'right' as const,
     direction: 'rtl' as const,
     flexDirection: 'row-reverse' as const,
